@@ -1,0 +1,21 @@
+{
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/dist": true
+    },
+    "editor.tabSize": 4,
+    "tslint.autoFixOnSave": true,
+    "tslint.exclude": "**/node_modules/**/*",
+    "eslint.autoFixOnSave": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.meta": true
+    },
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true
+}

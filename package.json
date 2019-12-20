@@ -18,5 +18,13 @@
   "bugs": {
     "url": "https://github.com/tency/nodejs-chat-server/issues"
   },
-  "homepage": "https://github.com/tency/nodejs-chat-server#readme"
+  "homepage": "https://github.com/tency/nodejs-chat-server#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "debug": "^4.1.1",
+    "log4js": "^6.1.0",
+    "moment": "^2.24.0",
+    "websocket": "^1.0.31",
+    "winston": "^3.2.1"
+  }
 }
