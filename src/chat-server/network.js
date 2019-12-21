@@ -30,7 +30,7 @@ class Network extends EventEmitter {
         this.connector.on("register_login", (conID, loginID, loginIp, loginPort) => {
             log.info("login server register conID = " + conID + ", loginID = " + loginID + ", ip = " + loginIp + ", port = " + loginPort);
 
-            this.loginList[gateID] = {
+            this.loginList[loginID] = {
                 conID: conID,
                 serverID: loginID,
                 serverIP: loginIp,

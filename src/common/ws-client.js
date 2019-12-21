@@ -2,6 +2,8 @@
 
 const EventEmitter = require("events");
 const WebSocket = require('ws');
+const PingReq = require("../protocol/ping-req");
+const ErrCode = require("./define").ErrCode;
 
 const log = logger.getLogger("WSClient");
 

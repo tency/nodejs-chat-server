@@ -20,7 +20,7 @@ class ChatServer extends Server {
         network.init(Config.chatHost, Config.chatPort);
         userMgr.init();
         groupMgr.init();
-        dbMgr.init();
+        //dbMgr.init();
     }
 
     startup() {

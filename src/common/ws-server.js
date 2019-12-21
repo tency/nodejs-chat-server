@@ -1,10 +1,11 @@
 'use strict';
 
 const EventEmitter = require("events");
-const WebSocket = require('websocket');
-const WebSocketServer = require('websocket').server;
+const WebSocket = require('ws');
 const http = require("http");
 const https = require("https");
+const PingReq = require("../protocol/ping-req");
+const Utility = require("./utility");
 
 const log = logger.getLogger("ws-server");
 
@@ -91,8 +92,8 @@ module.exports = class WSServer extends EventEmitter {
             cert: fs.readFileSync(this.options.cert),
             key: fs.readFileSync(this.options.key),
         });
-        this.wsServer = new WebSocketServer({
-            httpServer: server
+        this.wsServer = new WebSocket.Server({
+            server
         });
         this.registerListeners();
         server.listen(this.options.listeningPort, this.options.listeningIP);
@@ -100,8 +101,8 @@ module.exports = class WSServer extends EventEmitter {
 
     createServer() {
         const server = http.createServer();
-        this.wsServer = new WebSocketServer({
-            httpServer: server
+        this.wsServer = new WebSocket.Server({
+            server,
         });
         this.registerListeners();
         server.listen(this.options.listeningPort, this.options.listeningIP);
@@ -114,10 +115,7 @@ module.exports = class WSServer extends EventEmitter {
     }
 
     onListening() {
-        log.info("ws server listening on ",
-            this.options.useSSL === true ? "wss://" : "ws://",
-            `${this.options.listeningIP}`, ":", `${this.options.listeningPort}`
-        );
+        log.info("ws server listening on %s:%d", this.options.listeningIP, this.options.listeningPort);
     }
 
     onError(error) {
@@ -137,7 +135,7 @@ module.exports = class WSServer extends EventEmitter {
                     this.rmRequestCB(ws[this.conIDKey], pkg.reqSN);
                     cb(pkg.errCode, pkg.data);
                 } else {
-                    log.error(`can not find callback of request, id = ${pkg.reqID}, sn = ${pkg.reqSN}`);
+                    log.error("can not find callback of request, id = %s, sn = %s", pkg.reqID, pkg.reqSN);
                 }
             } else {
                 log.error("unknown package: ", pkg);

@@ -5,6 +5,7 @@ const Connector = require("../common/connector");
 const Dispatcher = require("./dispatcher");
 const WSClient = require("../common/ws-client");
 const Config = require("../config");
+const LoginReq = require("../common/login-req");
 
 const log = logger.getLogger("Network");
 
@@ -78,7 +79,7 @@ class Network extends EventEmitter {
                 serverIp: Config.loginHost,
                 serverPort: Config.loginPort + _serverId
             };
-            this.requestChat(reqID, loginData, (code, resp) => {
+            this.requestChat(LoginReq.reqID, loginData, (code, resp) => {
                 log.info('login server register to chat server suss');
                 log.info(resp);
             });

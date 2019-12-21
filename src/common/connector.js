@@ -2,6 +2,9 @@
 
 const WSServer = require("./ws-server");
 const LoginReq = require("../common/login-req");
+const ErrCode = require("../common/define").ErrCode;
+
+const log = logger.getLogger("connector");
 
 // 封装一个connetor用于自动关闭超时不登录的连接、处理登录请求
 class Connector extends WSServer {

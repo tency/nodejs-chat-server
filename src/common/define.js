@@ -1,5 +1,5 @@
 // 基础错误码定义
-global.ErrCode = {
+exports.ErrCode = {
     SUCCESS: 1, // 成功
     FAILED: 2, // 失败
     PASSWORDERROR: 3, // 密码错误
@@ -7,13 +7,13 @@ global.ErrCode = {
 }
 
 // 网络状态码，值域[3000, 5000)
-global.NetStatusCode = {
+exports.NetStatusCode = {
     HB_TIMEOUT: 3000, // 心跳包超时
     LOGIN_TIMEOUT: 3001, // 登录超时
 }
 
 // 消息id定义
-global.MSG_ID = {
+exports.MSG_ID = {
     // client 2 login
     W2G_REGISTER_GAME: '10001',
     W2G_REMOVE_GAME: '10002',
