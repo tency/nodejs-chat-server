@@ -17,12 +17,21 @@ class Network extends EventEmitter {
         this.connector = new Connector();
         this.dispatcher = new Dispatcher();
         this.chatWS = null;
+        this.loginID = 0;
     }
 
     // 初始化ip和端口
     init(host, port) {
         this.connector.host = host;
         this.connector.port = port;
+    }
+
+    setLoginID(id) {
+        this.loginID = id;
+    }
+
+    getLoginID() {
+        return this.loginID;
     }
 
     // 启动

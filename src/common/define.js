@@ -14,11 +14,19 @@ exports.NetStatusCode = {
 
 // 消息id定义
 exports.MSG_ID = {
-    // client 2 login
-    W2G_REGISTER_GAME: '10001',
-    W2G_REMOVE_GAME: '10002',
+    // client to login server
+    C2L_USER_LOGIN: '10001', // 登录
+    C2L_USER_LOGOUT: '10002', //登出
 
-    // client to gateway
-    C2G_REGISTER_CLIENT: '20001',
-    C2G_LOGIN: '20002',
+    // login server to client
+    //C2G_REGISTER_CLIENT: '20001',
+    //C2G_LOGIN: '20002',
+
+    // login server to chat server
+    L2CS_USER_CREATE: "30001",
+    L2CS_USER_GET: "30002",
+    L2CS_USER_LOGOUT: "30003",
+
+    // chat server to client
+    //CS2C_
 }

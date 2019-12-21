@@ -7,8 +7,6 @@ const Schema = new mongoose.Schema({
         unique: true
     },
     openid: String,
-    imel: String, // 设备号
-    sid: Number, // 区服
     regTime: Number, // 注册时间
     loginTime: Number, // 上次登录时间
     loginIp: String, // 上次登录ip

@@ -1,3 +1,5 @@
+'use strict';
+
 const log = logger.getLogger("dispatcher");
 
 module.exports = class Dispatcher {

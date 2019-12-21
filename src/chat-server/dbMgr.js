@@ -15,9 +15,9 @@ class DbMgr {
     init() {
         log.debug("db mgr init");
 
-        let cfgUrl = "./src/dbcfg/dbcfg";
+        let cfgUrl = "./dbcfg/dbcfg";
         this.dbConMgr = new DBConnectionMgr();
-        this.dbConMgr.init("./src/schema", cfgUrl)
+        this.dbConMgr.init("./schema", cfgUrl)
             .then(() => {
                 log.info('db init callback');
                 let connectionName = "connection_1";
