@@ -1,6 +1,7 @@
 const log4js = require("log4js");
 const path = require("path");
 
+// 简单的封装下log4js
 class Logger {
     constructor() {
         console.log("should call Logger constructor only once");
@@ -42,5 +43,5 @@ class Logger {
     }
 }
 
-const logger = new Logger();
+let logger = global.logger || new Logger();
 module.exports = logger;

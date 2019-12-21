@@ -17,17 +17,3 @@ dbConMgr.init("../src/schema", "../src/dbcfg/dbcfg")
         const userModel = connection.getModel("user");
         console.log(userModel);
     });
-
-// describe("DBConnection.connect", () => {
-//     it("should resolved", () => {
-//         const schemaMgr = new SchemaMgr();
-//         expect(schemaMgr.loadAllSchema("./schema")).toBe(true);
-//         const connection = new DBConnection(mongoDbCfgArray[0], schemaMgr);
-//         return expect(
-//             connection.connect().then(() => {
-//                 expect(connection.getModel("user")).not.toBeNull();
-//                 return connection.close();
-//             })
-//         ).resolves.toBeUndefined();
-//     });
-// });
