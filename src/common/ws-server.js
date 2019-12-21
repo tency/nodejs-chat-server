@@ -8,7 +8,7 @@ const https = require("https");
 const log = logger.getLogger("ws-server");
 
 module.exports = class WSServer extends EventEmitter {
-    constructor(options) {
+    constructor() {
         super();
         log.info("WSServer constructor");
 

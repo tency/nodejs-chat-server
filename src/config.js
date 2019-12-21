@@ -13,7 +13,7 @@ exports.chatPort = 41999;
 // 数据库配置
 exports.mongodbHost = '127.0.0.1'; // mongodb地址
 exports.mongodbPort = 27017; // mongodb端口
-exports.mongodbNamePrefix = 'dev_server_'; // 所用到的数据库名前缀
+exports.mongodbNamePrefix = 'chat_server_'; // 所用到的数据库名前缀
 
 exports.redisHost = '127.0.0.1'; // redies地址
 exports.redisPort = 6379; // redies端口

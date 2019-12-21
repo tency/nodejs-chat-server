@@ -3,7 +3,8 @@ const path = require("path");
 
 class Logger {
     constructor() {
-
+        console.log("should call Logger constructor only once");
+        this.logFileName = "test";
     }
 
     configure() {
@@ -34,7 +35,9 @@ class Logger {
     }
 
     setupLog(name) {
-        this.logFileName = name;
+        if (name) {
+            this.logFileName = name;
+        }
         this.configure();
     }
 }
