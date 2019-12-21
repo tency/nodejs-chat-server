@@ -2,6 +2,7 @@
 
 const EventEmitter = require("events");
 const WebSocket = require('websocket');
+const WebSocketServer = require('websocket').server;
 const http = require("http");
 const https = require("https");
 
@@ -90,8 +91,8 @@ module.exports = class WSServer extends EventEmitter {
             cert: fs.readFileSync(this.options.cert),
             key: fs.readFileSync(this.options.key),
         });
-        this.wsServer = new WebSocket.Server({
-            server
+        this.wsServer = new WebSocketServer({
+            httpServer: server
         });
         this.registerListeners();
         server.listen(this.options.listeningPort, this.options.listeningIP);
@@ -99,8 +100,8 @@ module.exports = class WSServer extends EventEmitter {
 
     createServer() {
         const server = http.createServer();
-        this.wsServer = new WebSocket.Server({
-            server
+        this.wsServer = new WebSocketServer({
+            httpServer: server
         });
         this.registerListeners();
         server.listen(this.options.listeningPort, this.options.listeningIP);

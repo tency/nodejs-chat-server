@@ -1,10 +1,13 @@
 'use strict';
 
 const EventEmitter = require("events");
-const WebSocket = require('websocket');
+const WebSocket = require('ws');
+
+const log = logger.getLogger("WSClient");
 
 module.exports = class WSClient extends EventEmitter {
     constructor() {
+        super();
         this.sn2cbMap = {};
 
         this.address = "";
@@ -19,10 +22,11 @@ module.exports = class WSClient extends EventEmitter {
         this.ws.onclose = this.onClose.bind(this);
         this.ws.onerror = this.onError.bind(this);
         this.ws.onmessage = this.onMessage.bind(this);
+        log.info("connect to %s", address);
     }
 
     disconnect(code, reason) {
-        log.info(`active disconnect from ${this.address}`);
+        log.info("active disconnect from %s", this.address);
         this.sn2cbMap = {};
         this.ws.close(code, reason);
     }
@@ -46,7 +50,7 @@ module.exports = class WSClient extends EventEmitter {
     }
 
     onOpen(ev) {
-        log.info(`on open connected to ${this.address}`);
+        log.info("on open connected to %s", this.address);
         this.emit("connected");
         this.on(PingReq.reqID, this.onPingReq.bind(this));
     }
@@ -57,7 +61,7 @@ module.exports = class WSClient extends EventEmitter {
     }
 
     onClose(ev) {
-        log.info(`disconnected from ${this.address}, code = ${ev.code}, reason = ${ev.reason}`);
+        log.info("disconnected from %s, code = %d, reason = %s", this.address, ev.code, ev.reason);
         this.emit("disconnected", ev.code, ev.reason);
     }
 
@@ -77,7 +81,7 @@ module.exports = class WSClient extends EventEmitter {
                 this.rmRequestCB(pkg.reqSN);
                 cb(pkg.errCode, pkg.data);
             } else {
-                log.error(`can not find callback of request, id = ${pkg.reqID}, sn = ${pkg.reqSN}`);
+                log.error("can not find callback of request, id = %d, sn = %s", pkg.reqID, pkg.reqSN);
             }
         } else {
             log.error("unknown package: ", pkg);
@@ -100,7 +104,7 @@ module.exports = class WSClient extends EventEmitter {
 
     addRequestCB(sn, cb) {
         if (this.sn2cbMap[sn] != undefined) {
-            log.error(`WSClient.addRequestCB error, sn ${sn} already added, the cb is ${cb === this.sn2cbMap[sn] ? "the same one" : "not the same one."}`);
+            log.error("WSClient.addRequestCB error, sn %s, already added", sn);
             return;
         }
         this.sn2cbMap[sn] = cb;

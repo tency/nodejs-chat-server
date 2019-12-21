@@ -1,9 +1,35 @@
 global.logger = require("./common/logger");
-const WS = require("./common/ws-server");
-
 logger.setupLog("chatServer");
 
 let log = logger.getLogger("start");
-log.info('chat server start')
 
-let wsInst = new WS();
+global.network = require("./chat-server/network");
+global.userMgr = require("./chat-server/usermgr");
+global.groupMgr = require("./chat-server/groupmgr");
+global.dbMgr = require("./chat-server/dbMgr");
+
+const Server = require("./common/server");
+const Config = require("./config");
+
+class ChatServer extends Server {
+    constructor() {
+        super();
+    }
+
+    init() {
+        network.init(Config.chatHost, Config.chatPort);
+        userMgr.init();
+        groupMgr.init();
+        dbMgr.init();
+    }
+
+    startup() {
+        super.startup();
+        this.init();
+        network.startup();
+        log.info('ChatServer startup...');
+    }
+}
+
+const chatServer = new ChatServer();
+chatServer.startup();

@@ -1,8 +1,12 @@
 'use strict';
 
+const WSServer = require("./ws-server");
+const LoginReq = require("../common/login-req");
+
 // 封装一个connetor用于自动关闭超时不登录的连接、处理登录请求
 class Connector extends WSServer {
     constructor() {
+        super();
         this.loginTimeout = 5000; // 等待认证的时长，超过这个时间没有认证直接关闭连接
         this.id2timerMap = {};
 
@@ -46,19 +50,9 @@ class Connector extends WSServer {
         if (response.isLogin) {
             this.clearLoginTimer(conID, "logon");
 
-            // 注册game
-            if (request.serverType == "game") {
-                this.emit("register_game", conID, request.serverId, request.serverIp, request.serverPort);
-            }
-
-            // 注册gateway
-            if (request.serverType == "gateway") {
-                this.emit("register_gate", conID, request.serverId, request.serverIp, request.serverPort);
-            }
-
-            // 注册db
-            if (request.serverType == "db") {
-                this.emit("register_db", conID, request.serverId, request.serverIp, request.serverPort);
+            // 注册login
+            if (request.serverType == "login") {
+                this.emit("register_login", conID, request.serverId, request.serverIp, request.serverPort);
             }
 
             // 注册client
@@ -94,3 +88,5 @@ class Connector extends WSServer {
         delete this.id2timerMap[conID];
     }
 }
+
+module.exports = Connector;

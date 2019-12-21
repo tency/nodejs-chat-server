@@ -61,8 +61,6 @@ module.exports = class DBConnection {
     }
 
     getModel(name) {
-        console.log("getModel " + name)
-        console.log(this.schemaMgr.getSchema(name))
         return this.connection.model(name, this.schemaMgr.getSchema(name));
     }
 }
