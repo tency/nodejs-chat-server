@@ -14,6 +14,9 @@ const Schema = new mongoose.Schema({
     nick: String, // 昵称
     gender: String, // 性别
     avatar: String, // 头像
+
+    // 好友列表,uid
+    friends: []
 }, {
     timestamps: true
 });

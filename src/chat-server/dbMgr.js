@@ -10,6 +10,7 @@ class DbMgr {
         this.dbConMgr = null;
         this.connection = null;
         this.userModel = null;
+        this.groupModel = null;
     }
 
     init() {
@@ -23,6 +24,7 @@ class DbMgr {
                 let connectionName = "connection_1";
                 this.connection = this.dbConMgr.getConnection(connectionName);
                 this.userModel = this.connection.getModel("user");
+                this.groupModel = this.connection.getModel("group");
             });
     }
 
@@ -35,6 +37,10 @@ class DbMgr {
 
     getUserModel() {
         return this.userModel;
+    }
+
+    getGroupModel() {
+        return this.groupModel;
     }
 }
 
