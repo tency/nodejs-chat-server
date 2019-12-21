@@ -8,6 +8,8 @@ global.userMgr = require("./chat-server/usermgr");
 global.groupMgr = require("./chat-server/groupmgr");
 global.dbMgr = require("./chat-server/dbMgr");
 global.loginMgr = require("./chat-server/loginmgr");
+global.cacheMgr = require("./chat-server/cachemgr");
+global.chatMgr = require("./chat-server/chatmgr");
 
 const Server = require("./common/server");
 const Config = require("./config");
@@ -23,6 +25,8 @@ class ChatServer extends Server {
         groupMgr.init();
         dbMgr.init();
         loginMgr.init();
+        cacheMgr.init();
+        chatMgr.init();
     }
 
     startup() {
