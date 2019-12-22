@@ -9,25 +9,22 @@ module.exports = class SchemaMgr {
     }
 
     loadAllSchema(schemaPath) {
-        try {
-            const fullPath = path.join(process.cwd(), schemaPath);
-            let fileNames = fs.readdirSync(fullPath);
-            fileNames = fileNames.filter(value => {
-                return path.extname(value).toLowerCase() == ".js";
-            });
+        const fullPath = path.join(process.cwd(), schemaPath);
+        let fileNames = fs.readdirSync(fullPath);
+        fileNames = fileNames.filter(value => {
+            return path.extname(value).toLowerCase() == ".js";
+        });
 
-            if (fileNames.length == 0) {
-                return false;
-            }
-
-            fileNames.forEach((fileName) => {
-                const schemaModule = require(path.join(fullPath, fileName));
-                this.schemaDictionary[path.basename(fileName, ".js")] = schemaModule;
-            });
-            return true;
-        } catch {
+        if (fileNames.length == 0) {
             return false;
         }
+
+        fileNames.forEach((fileName) => {
+            const schemaModule = require(path.join(fullPath, fileName));
+            this.schemaDictionary[path.basename(fileName, ".js")] = schemaModule;
+        });
+
+        return true;
     }
 
     getSchema(name) {
