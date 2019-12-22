@@ -55,7 +55,10 @@ module.exports = class Dispatcher {
             const user = userMgr.getUser(data.id);
             if (user) {
                 let connID = user.getConnId();
+                log.info("notify connID = %d", connID);
                 network.connector.message(connID, MSG_ID.L2C_ADD_FRIEND, data.newFriend);
+            } else {
+                log.error("cant find user, id = %s", data.id);
             }
         });
     }

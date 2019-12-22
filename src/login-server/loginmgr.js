@@ -19,7 +19,7 @@ class LoginMgr {
     handleUserLogin(conID, data, callback) {
         if (data.account == '') {
             // 账号为空，新建游客账号
-            this.createNewUser(data.account, data.pwd, callback);
+            this.createNewUser(conID, data.account, data.pwd, callback);
         } else {
             // 账号不为空，检查是否已重复登录
             let user = userMgr.getUserByOpenid(data.account);
@@ -37,7 +37,7 @@ class LoginMgr {
                     } else if (!result) {
                         // 账号不存在，自动注册
                         log.warn('can not find openid = %s, so create new one!', data.account);
-                        this.createNewUser(data.account, data.pwd, callback);
+                        this.createNewUser(conID, data.account, data.pwd, callback);
                     } else {
                         log.info('data.pwd = %s', data.pwd)
                         log.info('result.password = %s', result.password)
@@ -68,7 +68,7 @@ class LoginMgr {
     }
 
     // 创建一个新用户
-    createNewUser(account, password, callback) {
+    createNewUser(conID, account, password, callback) {
         const self = this;
 
         dbMgr.getDbPlat().findOneAndUpdate({
@@ -96,7 +96,7 @@ class LoginMgr {
                 const storePwd = Md5(pwd); // 数据库存md5密码
                 log.debug('newUID = %d', newUID);
 
-                self.registerUser(newUID, openid, (err, data) => {
+                self.registerUser(conID, newUID, openid, (err, data) => {
                     dbMgr.getDbPlat().insertOne({
                         _id: openid,
                         id: newUID,
@@ -117,7 +117,7 @@ class LoginMgr {
         });
     }
 
-    registerUser(id, openid, callback, pwd) {
+    registerUser(conID, id, openid, callback, pwd) {
         let userData = {
             id: id,
             openid: openid,
@@ -131,6 +131,7 @@ class LoginMgr {
             if (pwd) {
                 data.password = pwd;
             }
+            userMgr.createUser(id, openid, conID);
             callback && callback(err, data);
         });
     }
