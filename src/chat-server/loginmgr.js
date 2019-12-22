@@ -24,7 +24,7 @@ class LoginMgr {
             loginTime: Utility.getTime(),
             loginIp: "",
 
-            username: this.generateNick(),
+            username: data.openid,
             gender: "male",
             avatar: this.generateAvatar(),
             sign: this.generateSign(),
