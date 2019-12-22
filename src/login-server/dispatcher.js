@@ -39,5 +39,24 @@ module.exports = class Dispatcher {
             log.info("on message C2L_MODIFY_SIGN");
             userMgr.handleModifyNick(conID, data, callback);
         });
+
+        // 处理添加好友
+        network.connector.on(MSG_ID.C2L_ADD_FRIEND, (conID, data, callback) => {
+            log.info("on message C2L_ADD_FRIEND");
+            log.info(data);
+            userMgr.handleAddFriend(conID, data, callback);
+        });
+
+        //==== chat server 过来的消息
+        network.chatWS.on(MSG_ID.CS2L_ADD_FRIEND, (data) => {
+            log.info("on message CS2L_ADD_FRIEND");
+            log.info(data);
+
+            const user = userMgr.getUser(data.id);
+            if (user) {
+                let connID = user.getConnId();
+                network.connector.message(connID, MSG_ID.L2C_ADD_FRIEND, data.newFriend);
+            }
+        });
     }
 }

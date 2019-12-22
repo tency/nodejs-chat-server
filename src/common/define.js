@@ -20,20 +20,20 @@ exports.MSG_ID = {
     C2L_MODIFY_SIGN: "10003", // 修改签名
     C2L_MODIFY_AVATAR: "10004", // 修改头像
     C2L_MODIFY_NICK: "10005", // 修改昵称
+    C2L_ADD_FRIEND: "10006", // 添加好友
 
     // login server to client
-    //C2G_REGISTER_CLIENT: '20001',
-    //C2G_LOGIN: '20002',
+    L2C_ADD_FRIEND: "20001", // 添加好友通知
 
     // login server to chat server
     L2CS_USER_CREATE: "30001",
     L2CS_USER_GET: "30002",
     L2CS_USER_LOGOUT: "30003",
-
     L2CS_MODIFY_SIGN: "30004", // 修改签名
     L2CS_MODIFY_AVATAR: "30005", // 修改头像
     L2CS_MODIFY_NICK: "30006", // 修改昵称
+    L2CS_ADD_FRIEND: "30007", // 添加好友
 
-    // chat server to client
-    //CS2C_
+    // chat server to login server
+    CS2L_ADD_FRIEND: "40001", // 添加好友通知
 }

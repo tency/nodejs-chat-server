@@ -34,29 +34,41 @@ class LoginMgr {
 
         dbMgr.getUserModel().create(initData)
             .then(() => {
-                userMgr.createUser(initData.id, initData.openid, initData.username, data.loginid);
-                callback(ErrCode.SUCCESS, initData);
+                userMgr.createUser(initData, data.loginid);
+                let retData = {};
+                retData.mine = initData;
+                retData.friendList = [];
+                callback(ErrCode.SUCCESS, retData);
             });
     }
 
     // 获取用户数据
     handleGetUser(conID, data, callback) {
-        log.debug('handleGetUser data = ');
-        log.debug(data);
-
         let id = data.id;
         let user = userMgr.getUser(id);
         if (user) {
             log.warn('user is already login');
-            callback && callback(ErrCode.SUCCESS, user.getUserData());
+            user.getFriendList((friendList) => {
+                let retData = {};
+                retData.mine = user.getUserData();
+                retData.friendList = friendList;
+                callback && callback(ErrCode.SUCCESS, retData);
+            })
         } else {
             dbMgr.getUserModel().find({
                 id: data.id
             }).then((users) => {
                 let userData = users[0];
-                userMgr.loadUser(userData, data.loginid);
-                callback && callback(ErrCode.SUCCESS, userData);
-            });;
+                log.debug(userData)
+                userMgr.loadUser(userData, data.loginid, (user) => {
+                    user.getFriendList((friendList) => {
+                        let retData = {};
+                        retData.mine = userData;
+                        retData.friendList = friendList;
+                        callback && callback(ErrCode.SUCCESS, retData);
+                    })
+                });
+            });
         }
     }
 
@@ -82,7 +94,8 @@ class LoginMgr {
 
     // 随机一个头像
     generateAvatar() {
-        return "a.jpg";
+        const index = Utility.randomNumber(1, 9);
+        return "http://www.tap2joy.com/chat/static/img/a" + index + ".jpg";
     }
 
     // 随机一个签名

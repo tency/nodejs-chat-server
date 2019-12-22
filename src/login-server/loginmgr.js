@@ -25,6 +25,7 @@ class LoginMgr {
             let user = userMgr.getUserByOpenid(data.account);
             if (user) {
                 log.warn('user is already login');
+                log.debug(user)
                 this.requestLoginChatServer(conID, user.getId(), data.account, callback);
             } else {
                 dbMgr.getDbPlat().findOne({
@@ -165,13 +166,14 @@ class LoginMgr {
             loginid: network.getLoginID()
         };
 
+        log.debug("requestLoginChatServer userData = ");
+        log.debug(userData);
         network.requestChat(MSG_ID.L2CS_USER_GET, userData, (err, data) => {
-            log.info('receive chat server resp');
+            log.info('receive chat server resp, err = %s', err);
 
-            userMgr.createUser(data.id, data.openid, conID);
-            this.connMap[conID] = data.openid;
+            userMgr.createUser(data.mine.id, data.mine.openid, conID);
+            this.connMap[conID] = data.mine.openid;
 
-            delete data.password;
             callback && callback(err, data);
         });
     }

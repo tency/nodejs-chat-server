@@ -42,5 +42,11 @@ module.exports = class Dispatcher {
             log.info("on message L2CS_MODIFY_NICK");
             userMgr.handleModifyNick(conID, data, callback);
         });
+
+        // 处理添加好友
+        network.connector.on(MSG_ID.L2CS_ADD_FRIEND, (conID, data, callback) => {
+            log.info("on message L2CS_ADD_FRIEND");
+            userMgr.handleAddFriend(conID, data, callback);
+        });
     }
 }

@@ -52,6 +52,10 @@ class UserMgr {
     handleModifyNick(conID, data, callback) {
         network.requestChat(MSG_ID.L2CS_MODIFY_NICK, data, callback);
     }
+
+    handleAddFriend(conID, data, callback) {
+        network.requestChat(MSG_ID.L2CS_ADD_FRIEND, data, callback);
+    }
 }
 
 let userMgr = global.userMgr || new UserMgr();

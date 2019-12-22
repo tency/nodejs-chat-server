@@ -24,6 +24,7 @@ class LoginServer extends Server {
             .then(() => {
                 var _serverId = parseInt(process.argv[process.argv.length - 1]);
                 network.init(Config.loginHost, Config.loginPort + _serverId);
+                network.setLoginID(_serverId);
                 userMgr.init();
                 loginMgr.init();
                 callback();

@@ -74,10 +74,13 @@ class Network extends EventEmitter {
     }
 
     // 通知消息到login
-    messageLogin(loginID, reqID, data) {
+    messageLogin(loginID, msgId, data) {
+        log.debug("messageLogin loginID = %d, msgId = %d", loginID, msgId);
+        log.debug(this.loginList)
+        log.info(data)
         if (this.loginList[loginID]) {
-            let conID = this.gameList[loginID].conID;
-            this.connector.message(conID, reqID, data);
+            let conID = this.loginList[loginID].conID;
+            this.connector.message(conID, msgId, data);
         }
     }
 
