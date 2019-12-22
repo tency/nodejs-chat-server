@@ -1,5 +1,5 @@
-//global.logger = require("./common/logger");
-global.logger = require("./common/logger-winston");
+global.logger = require("./common/logger");
+//global.logger = require("./common/logger-winston");
 logger.setupLog("chatServer", "debug");
 
 let log = logger.getLogger("start");
