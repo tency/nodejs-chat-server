@@ -27,6 +27,8 @@ class LoginMgr {
             nick: this.generateNick(),
             gender: "male",
             avatar: "default",
+
+            friends: [],
         };
 
         dbMgr.getUserModel().create(initData)
@@ -38,20 +40,20 @@ class LoginMgr {
 
     // 获取用户数据
     handleGetUser(conID, data, callback) {
-        log.info('handleGetUser data = ');
-        log.info(data);
+        log.debug('handleGetUser data = ');
+        log.debug(data);
 
         let uid = data.uid;
         let user = userMgr.getUser(uid);
         if (user) {
-            log.info('user is already login');
+            log.warn('user is already login');
             callback && callback(ErrCode.SUCCESS, user.getUserData());
         } else {
             dbMgr.getUserModel().find({
                 uid: data.uid
             }).then((users) => {
                 let userData = users[0];
-                userMgr.createUser(userData.uid, userData.openid, userData.nick, data.loginid);
+                userMgr.loadUser(userData, data.loginid);
                 callback && callback(ErrCode.SUCCESS, userData);
             });;
         }
@@ -59,7 +61,7 @@ class LoginMgr {
 
     // 用户登出
     handleLogoutUser(conID, data, callback) {
-        log.info(data);
+        log.debug(data);
         let uid = data.uid;
         let user = userMgr.getUser(uid);
         if (!user) {

@@ -13,24 +13,28 @@ class DbMgr {
     }
 
     init() {
-        var index = parseInt(process.argv[process.argv.length - 1]);
-        let dbIndex = Config.serverId + index;
-        let dbName = Config.mongodbNamePrefix + dbIndex;
-        let url = "mongodb://" + Config.mongodbHost + ":" + Config.mongodbPort + "/" + dbName;
+        return new Promise((resolve, reject) => {
+            var index = parseInt(process.argv[process.argv.length - 1]);
+            let dbIndex = Config.serverId + index;
+            let dbName = Config.mongodbNamePrefix + dbIndex;
+            let url = "mongodb://" + Config.mongodbHost + ":" + Config.mongodbPort + "/" + dbName;
 
-        this.connect(url, dbName, () => {
-            log.info('login db connect');
+            this.connect(url, dbName, () => {
+                log.info('login db connect');
 
-            // 如果还没有数据，就插入一条
-            this.dbPlat.countDocuments({})
-                .then((count) => {
-                    if (count <= 0) {
-                        this.dbPlat.insertOne({
-                            _id: '_userid',
-                            'ai': Config.serverId * index * 1000000
-                        });
-                    }
-                })
+                // 如果还没有数据，就插入一条
+                this.dbPlat.countDocuments({})
+                    .then((count) => {
+                        if (count <= 0) {
+                            this.dbPlat.insertOne({
+                                _id: '_userid',
+                                'ai': Config.serverId * index * 1000000
+                            });
+                        }
+
+                        resolve();
+                    })
+            });
         });
     };
 

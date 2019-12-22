@@ -16,19 +16,23 @@ class LoginServer extends Server {
         super();
     }
 
-    init() {
-        var _serverId = parseInt(process.argv[process.argv.length - 1]);
-        network.init(Config.loginHost, Config.loginPort + _serverId);
-        userMgr.init();
-        dbMgr.init();
-        loginMgr.init();
+    init(callback) {
+        dbMgr.init()
+            .then(() => {
+                var _serverId = parseInt(process.argv[process.argv.length - 1]);
+                network.init(Config.loginHost, Config.loginPort + _serverId);
+                userMgr.init();
+                loginMgr.init();
+                callback();
+            });
     }
 
     startup() {
-        super.startup();
-        this.init();
-        network.startup();
-        log.info('LoginServer startup...');
+        this.init(() => {
+            super.startup();
+            network.startup();
+            log.info('LoginServer startup...');
+        });
     }
 }
 

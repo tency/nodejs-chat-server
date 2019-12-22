@@ -15,17 +15,20 @@ class DbMgr {
 
     init() {
         log.debug("db mgr init");
+        return new Promise((resolve, reject) => {
+            let cfgUrl = "./dbcfg/dbcfg";
+            this.dbConMgr = new DBConnectionMgr();
+            this.dbConMgr.init("./schema", cfgUrl)
+                .then(() => {
+                    log.info('mongodb connected');
+                    let connectionName = "connection_1";
+                    this.connection = this.dbConMgr.getConnection(connectionName);
+                    this.userModel = this.connection.getModel("user");
+                    this.groupModel = this.connection.getModel("group");
 
-        let cfgUrl = "./dbcfg/dbcfg";
-        this.dbConMgr = new DBConnectionMgr();
-        this.dbConMgr.init("./schema", cfgUrl)
-            .then(() => {
-                log.info('db init callback');
-                let connectionName = "connection_1";
-                this.connection = this.dbConMgr.getConnection(connectionName);
-                this.userModel = this.connection.getModel("user");
-                this.groupModel = this.connection.getModel("group");
-            });
+                    resolve();
+                });
+        });
     }
 
     disconnect() {

@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require("./user");
+const ErrCode = require("../common/define").ErrCode;
 
 const log = logger.getLogger("usermgr");
 
@@ -19,9 +20,17 @@ class UserMgr {
         return this.userList[uid];
     }
 
-    createUser(uid, openid, nick) {
+    createUser(uid, openid, nick, loginId) {
         let newUser = new User();
-        newUser.init(uid, openid, nick);
+        newUser.init(uid, openid, nick, loginId);
+        newUser.onCreate();
+        this.userList[uid] = newUser;
+    }
+
+    // 从数据库数据构造用户
+    loadUser(userData, loginId) {
+        let newUser = new User();
+        newUser.initWithData(userData, loginId);
         newUser.onCreate();
         this.userList[uid] = newUser;
     }
@@ -31,6 +40,32 @@ class UserMgr {
             this.userList[uid].onRemove();
             delete this.userList[uid];
         }
+    }
+
+    // 修改昵称
+    handleModifyNick(conID, data, callback) {
+        let user = this.getUser(data.uid);
+        if (!user) {
+            log.error("can't find user, uid = %s", data.uid);
+            callback && callback(ErrCode.FAIL);
+            return;
+        }
+
+        user.setNick(data.nick);
+        callback && callback(ErrCode.SUCCESS, user.getNick());
+    }
+
+    // 修改头像
+    handleModifyAvatar(conID, data, callback) {
+        let user = this.getUser(data.uid);
+        if (!user) {
+            log.error("can't find user, uid = %s", data.uid);
+            callback && callback(ErrCode.FAIL);
+            return;
+        }
+
+        user.setAvatar(data.avatar);
+        callback && callback(ErrCode.SUCCESS, user.getAvatar());
     }
 }
 

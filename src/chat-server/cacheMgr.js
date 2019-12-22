@@ -10,9 +10,12 @@ class CacheMgr {
     }
 
     init() {
-        this.connectRedis((cache) => {
-            this.cache = cache;
-            log.info("redis connect");
+        return new Promise((resolve, reject) => {
+            this.connectRedis((cache) => {
+                this.cache = cache;
+                log.info("redis connect...");
+                resolve();
+            });
         });
     }
 

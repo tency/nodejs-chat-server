@@ -45,7 +45,7 @@ class Connector extends WSServer {
 
     onLoginReq(conID, request, cb) {
         // TODO: login
-        log.info(request);
+        log.debug(request);
         const response = {
             isLogin: true,
             userID: Date.now().toString()

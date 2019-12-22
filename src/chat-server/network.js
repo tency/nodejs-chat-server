@@ -59,7 +59,7 @@ class Network extends EventEmitter {
 
     // 停止
     shutdown() {
-        log.debug("Network shutdown");
+        log.info("Network shutdown");
         this.connector.shutdown();
         this.connector = null;
         this.loginList = {};

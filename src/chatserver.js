@@ -19,21 +19,28 @@ class ChatServer extends Server {
         super();
     }
 
-    init() {
-        network.init(Config.chatHost, Config.chatPort);
-        userMgr.init();
-        groupMgr.init();
-        dbMgr.init();
-        loginMgr.init();
-        cacheMgr.init();
-        chatMgr.init();
+    init(callback) {
+        dbMgr.init()
+            .then(() => {
+                return cacheMgr.init();
+            })
+            .then(() => {
+                network.init(Config.chatHost, Config.chatPort);
+                userMgr.init();
+                groupMgr.init();
+                loginMgr.init();
+                chatMgr.init();
+                callback && callback();
+            });
+
     }
 
     startup() {
-        super.startup();
-        this.init();
-        network.startup();
-        log.info('ChatServer startup...');
+        this.init(() => {
+            super.startup();
+            network.startup();
+            log.info('ChatServer startup...');
+        })
     }
 }
 

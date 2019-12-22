@@ -7,13 +7,12 @@ const Schema = new mongoose.Schema({
         unique: true
     },
     openid: String,
-    regTime: Number, // 注册时间
-    loginTime: Number, // 上次登录时间
     loginIp: String, // 上次登录ip
 
     nick: String, // 昵称
     gender: String, // 性别
     avatar: String, // 头像
+    sign: String, // 签名
 
     // 好友列表,uid
     friends: []
