@@ -5,10 +5,10 @@ const log = logger.getLogger("user");
 module.exports = class User {
     constructor() {
         this.userData = {};
-        this.userData.uid = 0;
+        this.userData.id = 0;
         this.userData.openid = "";
         this.userData.loginIp = "";
-        this.userData.nick = "";
+        this.userData.username = "";
         this.userData.gender = "male";
         this.userData.avatar = "default";
         this.userData.sign = "Hello Node";
@@ -18,10 +18,10 @@ module.exports = class User {
         this.dirty = 0; //按位更新
     }
 
-    init(uid, openid, nick, loginid) {
-        this.userData.uid = uid;
+    init(id, openid, username, loginid) {
+        this.userData.id = id;
         this.userData.openid = openid;
-        this.userData.nick = nick;
+        this.userData.username = username;
         this.loginID = loginid;
     }
 
@@ -38,8 +38,12 @@ module.exports = class User {
         return this.loginID;
     }
 
-    getUid() {
-        return this.userData.uid;
+    getId() {
+        return this.userData.id;
+    }
+
+    getNick() {
+        return this.userData.username;
     }
 
     getOpenid() {
@@ -64,7 +68,7 @@ module.exports = class User {
     }
 
     setNick(name) {
-        this.userData.nick = name;
+        this.userData.username = name;
         this.setDirty(1);
     }
 
@@ -83,23 +87,23 @@ module.exports = class User {
     }
 
     onCreate() {
-        log.debug("on user create, uid = %d", this.userData.uid);
+        log.debug("on user create, id = %d", this.userData.id);
     }
 
     onRemove() {
-        log.debug("on user remove, uid = %d", this.userData.uid);
+        log.debug("on user remove, id = %d", this.userData.id);
         if (this.dirty > 0) {
             this.save(() => {
                 // 保存完设置为0
                 this.dirty = 0;
-                log.debug("user save finish, uid = %d", this.userData.uid);
+                log.debug("user save finish, id = %d", this.userData.id);
             });
         }
     }
 
     save(callback) {
         dbMgr.getUserModel().find({
-                uid: this.userData.uid
+                id: this.userData.id
             })
             .then(users => {
                 let user = users[0];
@@ -109,7 +113,7 @@ module.exports = class User {
                     user.set("loginIp", this.userData.loginIp);
                 }
                 if (this.dirty & 2 != 0) {
-                    user.set('nick', this.userData.nick);
+                    user.set('username', this.userData.username);
                 }
                 if (this.dirty & 4 != 0) {
                     user.set('avatar', this.userData.avatar);

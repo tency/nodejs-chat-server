@@ -4,19 +4,19 @@ const log = logger.getLogger("user");
 
 module.exports = class User {
     constructor() {
-        this.uid = 0; // 唯一id
+        this.id = 0; // 唯一id
         this.openid = ""; // 账号
         this.connId = 0; // 连接id
     }
 
-    init(uid, openid, connid) {
-        this.uid = uid;
+    init(id, openid, connid) {
+        this.id = id;
         this.openid = openid;
         this.connId = connid;
     }
 
-    getUid() {
-        return this.uid;
+    getId() {
+        return this.id;
     }
 
     getOpenid() {
@@ -28,10 +28,10 @@ module.exports = class User {
     }
 
     onCreate() {
-        log.info("on create user, uid = ", this.uid);
+        log.info("on create user, id = ", this.id);
     }
 
     onRemove() {
-        log.info("on remove user, uid = %d", this.uid);
+        log.info("on remove user, id = %d", this.id);
     }
 }

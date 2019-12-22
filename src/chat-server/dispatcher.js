@@ -24,5 +24,23 @@ module.exports = class Dispatcher {
             log.info("on message L2CS_USER_LOGOUT");
             loginMgr.handleLogoutUser(conID, data, callback);
         });
+
+        // 处理修改签名
+        network.connector.on(MSG_ID.L2CS_MODIFY_SIGN, (conID, data, callback) => {
+            log.info("on message L2CS_MODIFY_SIGN");
+            userMgr.handleModifySign(conID, data, callback);
+        });
+
+        // 处理修改头像
+        network.connector.on(MSG_ID.L2CS_MODIFY_AVATAR, (conID, data, callback) => {
+            log.info("on message L2CS_MODIFY_AVATAR");
+            userMgr.handleModifyAvatar(conID, data, callback);
+        });
+
+        // 处理修改昵称
+        network.connector.on(MSG_ID.L2CS_MODIFY_NICK, (conID, data, callback) => {
+            log.info("on message L2CS_MODIFY_NICK");
+            userMgr.handleModifyNick(conID, data, callback);
+        });
     }
 }

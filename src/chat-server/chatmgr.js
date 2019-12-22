@@ -5,11 +5,11 @@ const log = logger.getLogger("chatmgr");
 // 聊天管理器
 class ChatMgr {
     constructor() {
-        //  1v1聊天记录，用uid_uid作为logId
+        //  1v1聊天记录，用id_id作为logId
         this.chatLog = {};
 
-        // uid与logId对应表，方便快速查找指定玩家的记录
-        this.uidLogIdTab = {};
+        // id与logId对应表，方便快速查找指定玩家的记录
+        this.idLogIdTab = {};
 
         // 群聊天记录，用群id做key
         this.groupChatLog = {};

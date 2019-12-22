@@ -8,7 +8,7 @@ const log = logger.getLogger("login");
 
 class LoginMgr {
     constructor() {
-        this.connMap = {}; // 记录connId与uid的对应关系，以便在连接端口的时候移除对应的用户
+        this.connMap = {}; // 记录connId与id的对应关系，以便在连接端口的时候移除对应的用户
     }
 
     init() {
@@ -19,77 +19,31 @@ class LoginMgr {
     handleUserLogin(conID, data, callback) {
         if (data.account == '') {
             // 账号为空，新建游客账号
-            dbMgr.getDbPlat().findOneAndUpdate({
-                _id: '_userid'
-            }, {
-                $inc: {
-                    'ai': 1
-                }
-            }, {
-                'returnOriginal': false
-            }, function (err, result) {
-                if (!err) {
-                    var newUID = result.value.ai;
-                    let openid = Utility.randomString(8) + newUID;
-
-                    // 随机一个16位的密码
-                    let pwd = Utility.randomString(16);
-                    const storePwd = Md5.hashStr(pwd); // 数据库存md5密码
-
-                    log.info('newUID = %d', newUID);
-                    dbMgr.getDbPlat().insertOne({
-                        _id: openid,
-                        uid: newUID,
-                        password: storePwd,
-                        time: Utility.getTime()
-                    }, function (err, result) {
-                        if (err) {
-                            log.error('plat insert new user failed! err = %s', err);
-                        } else {
-                            log.info('create a new user suss');
-
-                            let userData = {
-                                uid: newUID,
-                                openid: openid,
-                                loginid: network.getLoginID()
-                            };
-
-                            network.requestChat(MSG_ID.L2CS_USER_CREATE, userData, (err, data) => {
-                                log.info('receive chat resp');
-
-                                // 传给客户端的是明文密码，可以让客户端展示出来
-                                data.password = pwd;
-                                callback && callback(err, data);
-                            });
-                        };
-                    });
-                } else {
-                    log.error('inc plat uid error');
-                }
-            });
+            this.createNewUser(data.account, data.pwd, callback);
         } else {
             // 账号不为空，检查是否已重复登录
-            if (this.users[data.account]) {
-                log.info('user is already login');
-                this.requestLoginChatServer(conID, this.users[data.account].uid, data.account, callback);
+            let user = userMgr.getUserByOpenid(data.account);
+            if (user) {
+                log.warn('user is already login');
+                this.requestLoginChatServer(conID, user.getId(), data.account, callback);
             } else {
                 dbMgr.getDbPlat().findOne({
                     _id: data.account
                 }, (err, result) => {
-                    log.info('findOne err = ' + err)
+                    log.debug('findOne err = ' + err)
                     if (err) {
-                        // 账号不存在
                         callback(ErrCode.FAILED);
                     } else if (!result) {
-                        log.error('can not find openid = %s', data.account);
-                        callback(ErrCode.FAILED);
+                        // 账号不存在，自动注册
+                        log.warn('can not find openid = %s, so create new one!', data.account);
+                        this.createNewUser(data.account, data.pwd, callback);
                     } else {
                         log.info('data.pwd = %s', data.pwd)
                         log.info('result.password = %s', result.password)
-                        if (Md5.hashStr(data.pwd) == result.password) {
+                        if (Md5(data.pwd) == result.password) {
                             log.info('login succeed');
 
-                            this.requestLoginChatServer(conID, result.uid, result.openid, callback);
+                            this.requestLoginChatServer(conID, result.id, result.openid, callback);
                         } else {
                             // 密码错误
                             callback(ErrCode.PASSWORDERROR);
@@ -100,10 +54,113 @@ class LoginMgr {
         }
     }
 
-    // 向chatServer请求登录数据
-    requestLoginChatServer(conID, uid, openid, callback) {
+    handleUserLogout(conID, data, callback) {
+        let id = data.id;
+        let user = userMgr.getUser(id);
+        if (!user) {
+            log.error("cant find user when logout, id = %d", id);
+            callback(ErrCode.FAILED);
+            return;
+        }
+
+        // 通知chat server 登出
+    }
+
+    // 创建一个新用户
+    createNewUser(account, password, callback) {
+        const self = this;
+
+        dbMgr.getDbPlat().findOneAndUpdate({
+            _id: '_userid'
+        }, {
+            $inc: {
+                'ai': 1
+            }
+        }, {
+            'returnOriginal': false
+        }, function (err, result) {
+            if (!err) {
+                var newUID = result.value.ai;
+
+                let openid = account;
+                if (!openid || openid == "") {
+                    openid = Utility.randomString(8) + newUID;
+                }
+
+                let pwd = password;
+                if (!pwd || pwd == "") {
+                    // 随机一个16位的密码
+                    pwd = Utility.randomString(16);
+                }
+                const storePwd = Md5(pwd); // 数据库存md5密码
+                log.debug('newUID = %d', newUID);
+
+                self.registerUser(newUID, openid, (err, data) => {
+                    dbMgr.getDbPlat().insertOne({
+                        _id: openid,
+                        id: newUID,
+                        password: storePwd,
+                        time: Utility.getTime()
+                    }, function (err, result) {
+                        if (err) {
+                            log.error('plat insert new user failed! err = %s', err);
+                        } else {
+                            log.info('create a new user suss');
+                            callback && callback(ErrCode.SUCCESS, data);
+                        };
+                    });
+                }, pwd);
+            } else {
+                log.error('inc plat id error');
+            }
+        });
+    }
+
+    registerUser(id, openid, callback, pwd) {
         let userData = {
-            uid: uid,
+            id: id,
+            openid: openid,
+            loginid: network.getLoginID()
+        };
+
+        network.requestChat(MSG_ID.L2CS_USER_CREATE, userData, (err, data) => {
+            log.info('receive chat server resp');
+
+            // 传给客户端的是明文密码，可以让客户端展示出来
+            if (pwd) {
+                data.password = pwd;
+            }
+            callback && callback(err, data);
+        });
+    }
+
+    logoutUser(id, callback) {
+        let user = userMgr.getUser(id);
+        if (user) {
+            let reqData = {
+                id: user.getId(),
+                openid: user.getOpenid(),
+            }
+            network.requestChat(MSG_ID.GA2G_LOGOUT_USER, reqData, (err, data) => {
+                if (err) {
+                    log.error('user logout chat server failed, openid = %s, err = %s', openid, err);
+                    callback && callback(ErrCode.FAILED);
+                } else {
+                    log.info('user logout chat server suss, openid = %s', openid);
+                    userMgr.removeUser(id);
+                    callback && callback(ErrCode.SUCCESS);
+                }
+            });
+        } else {
+            log.error('can not find user, openid = ' + openid);
+            callback && callback(ErrCode.FAILED);
+        }
+    }
+
+    // 向chatServer请求登录数据
+    requestLoginChatServer(conID, id, openid, callback) {
+        let userData = {
+            id: id,
             openid: openid,
             loginid: network.getLoginID()
         };
@@ -111,7 +168,7 @@ class LoginMgr {
         network.requestChat(MSG_ID.L2CS_USER_GET, userData, (err, data) => {
             log.info('receive chat server resp');
 
-            userMgr.createUser(data.uid, data.openid, conID);
+            userMgr.createUser(data.id, data.openid, conID);
             this.connMap[conID] = data.openid;
 
             delete data.password;
@@ -122,26 +179,12 @@ class LoginMgr {
     // 客户端断开
     onClientDisconnect(conID, code, reason) {
         log.info('onClientDisconnect conID = ' + conID + ', code = ' + code + ', reason = ' + reason);
-        let uid = this.connMap[conID];
-        if (uid) {
+        let id = this.connMap[conID];
+        if (id) {
             // 通知chat server客户端断开
-            let user = userMgr.getUser(uid);
-            if (user) {
-                let reqData = {
-                    uid: user.getUid(),
-                    openid: user.getOpenid(),
-                }
-                network.requestChat(MSG_ID.GA2G_LOGOUT_USER, reqData, (err, data) => {
-                    if (err) {
-                        log.error('user logout chat server failed, openid = %s, err = %s', openid, err);
-                    } else {
-                        log.info('user logout chat server suss, openid = %s', openid);
-                        userMgr.removeUser(uid);
-                    }
-                });
-            } else {
-                log.error('can not find user, openid = ' + openid);
-            }
+            this.logoutUser(id, () => {
+                log.info("user logout, id = %d", id);
+            });
         } else {
             log.error('onClientDisconnect user not exist, conID = ' + conID);
         }

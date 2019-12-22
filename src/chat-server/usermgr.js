@@ -16,15 +16,15 @@ class UserMgr {
         log.debug("user mgr init");
     }
 
-    getUser(uid) {
-        return this.userList[uid];
+    getUser(id) {
+        return this.userList[id];
     }
 
-    createUser(uid, openid, nick, loginId) {
+    createUser(id, openid, nick, loginId) {
         let newUser = new User();
-        newUser.init(uid, openid, nick, loginId);
+        newUser.init(id, openid, nick, loginId);
         newUser.onCreate();
-        this.userList[uid] = newUser;
+        this.userList[id] = newUser;
     }
 
     // 从数据库数据构造用户
@@ -32,21 +32,21 @@ class UserMgr {
         let newUser = new User();
         newUser.initWithData(userData, loginId);
         newUser.onCreate();
-        this.userList[uid] = newUser;
+        this.userList[userData.id] = newUser;
     }
 
-    removeUser(uid) {
-        if (this.userList[uid]) {
-            this.userList[uid].onRemove();
-            delete this.userList[uid];
+    removeUser(id) {
+        if (this.userList[id]) {
+            this.userList[id].onRemove();
+            delete this.userList[id];
         }
     }
 
     // 修改昵称
     handleModifyNick(conID, data, callback) {
-        let user = this.getUser(data.uid);
+        let user = this.getUser(data.id);
         if (!user) {
-            log.error("can't find user, uid = %s", data.uid);
+            log.error("can't find user, id = %s", data.id);
             callback && callback(ErrCode.FAIL);
             return;
         }
@@ -57,15 +57,27 @@ class UserMgr {
 
     // 修改头像
     handleModifyAvatar(conID, data, callback) {
-        let user = this.getUser(data.uid);
+        let user = this.getUser(data.id);
         if (!user) {
-            log.error("can't find user, uid = %s", data.uid);
+            log.error("can't find user, id = %s", data.id);
             callback && callback(ErrCode.FAIL);
             return;
         }
 
         user.setAvatar(data.avatar);
         callback && callback(ErrCode.SUCCESS, user.getAvatar());
+    }
+
+    handleModifySign(conID, data, callback) {
+        let user = this.getUser(data.id);
+        if (!user) {
+            log.error("can't find user, id = %s", data.id);
+            callback && callback(ErrCode.FAIL);
+            return;
+        }
+
+        user.setSign(data.sign);
+        callback && callback(ErrCode.SUCCESS, user.getSign());
     }
 }
 

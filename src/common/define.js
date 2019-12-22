@@ -17,6 +17,9 @@ exports.MSG_ID = {
     // client to login server
     C2L_USER_LOGIN: '10001', // 登录
     C2L_USER_LOGOUT: '10002', //登出
+    C2L_MODIFY_SIGN: "10003", // 修改签名
+    C2L_MODIFY_AVATAR: "10004", // 修改头像
+    C2L_MODIFY_NICK: "10005", // 修改昵称
 
     // login server to client
     //C2G_REGISTER_CLIENT: '20001',
@@ -26,6 +29,10 @@ exports.MSG_ID = {
     L2CS_USER_CREATE: "30001",
     L2CS_USER_GET: "30002",
     L2CS_USER_LOGOUT: "30003",
+
+    L2CS_MODIFY_SIGN: "30004", // 修改签名
+    L2CS_MODIFY_AVATAR: "30005", // 修改头像
+    L2CS_MODIFY_NICK: "30006", // 修改昵称
 
     // chat server to client
     //CS2C_
