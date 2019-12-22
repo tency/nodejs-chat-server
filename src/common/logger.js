@@ -7,7 +7,7 @@ class Logger {
         this.logFileName = "test";
     }
 
-    configure() {
+    configure(logLevel) {
         const fullpath = path.join(process.cwd(), './logs/', this.logFileName);
         log4js.configure({
             appenders: {
@@ -24,7 +24,7 @@ class Logger {
             categories: {
                 default: {
                     appenders: ["out", "log_file"],
-                    level: "debug"
+                    level: logLevel || "debug"
                 }
             }
         });
@@ -34,11 +34,11 @@ class Logger {
         return log4js.getLogger(name);
     }
 
-    setupLog(name) {
+    setupLog(name, level) {
         if (name) {
             this.logFileName = name;
         }
-        this.configure();
+        this.configure(level);
     }
 }
 

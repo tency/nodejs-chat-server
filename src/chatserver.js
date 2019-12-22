@@ -1,5 +1,5 @@
 global.logger = require("./common/logger");
-logger.setupLog("chatServer");
+logger.setupLog("chatServer", "debug");
 
 let log = logger.getLogger("start");
 
