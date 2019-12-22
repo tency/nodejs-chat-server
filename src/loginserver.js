@@ -1,4 +1,5 @@
-global.logger = require("./common/logger");
+//global.logger = require("./common/logger");
+global.logger = require("./common/logger-winston");
 logger.setupLog("LoginServer");
 
 let log = logger.getLogger("start");
