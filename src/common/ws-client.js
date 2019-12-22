@@ -127,6 +127,4 @@ module.exports = class WSClient extends EventEmitter {
     genReqSN() {
         return ++this.snSeed;
     }
-
-
 }

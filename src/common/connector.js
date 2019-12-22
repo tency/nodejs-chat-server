@@ -3,6 +3,7 @@
 const WSServer = require("./ws-server");
 const LoginReq = require("../common/login-req");
 const ErrCode = require("../common/define").ErrCode;
+const NetStatusCode = require("../common/define").NetStatusCode;
 
 const log = logger.getLogger("connector");
 

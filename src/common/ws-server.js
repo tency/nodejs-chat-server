@@ -28,7 +28,7 @@ module.exports = class WSServer extends EventEmitter {
         this.snSeed = 0;
         this.idSeed = 0;
         this.conIDKey = "_con_id_key_";
-        this.pingTimeout = 30000;
+        this.pingTimeout = 10000;
     }
 
     startup(options) {

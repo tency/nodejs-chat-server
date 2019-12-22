@@ -40,22 +40,14 @@ class Network extends EventEmitter {
         this.connector.startup();
 
         // 监听客户端连接
-        this.connector.on("register_client", (conID, loginID, loginIp, loginPort) => {
-            log.info("login server register conID = " + conID + ", loginID = " + loginID + ", ip = " + loginIp + ", port = " + loginPort);
-
-            this.loginList[gateID] = {
-                conID: conID,
-                serverID: loginID,
-                serverIP: loginIp,
-                serverPort: loginPort
-            }
+        this.connector.on("register_client", (conID, loginIp, loginPort) => {
+            log.info("client login conID = " + conID);
         });
 
         // 监听客户端移除
         this.connector.on("remove_login", (conID) => {
             log.info("remove login conID = " + conID);
         });
-
 
         this.connectToChat(() => {
             log.info("network startup at %s:%d", this.connector.host, this.connector.port);
