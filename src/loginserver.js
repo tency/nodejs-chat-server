@@ -1,6 +1,8 @@
-//global.logger = require("./common/logger");
-global.logger = require("./common/logger-winston");
-logger.setupLog("LoginServer");
+global.logger = require("./common/logger");
+//global.logger = require("./common/logger-winston");
+
+var index = parseInt(process.argv[process.argv.length - 1]);
+logger.setupLog("LoginServer_" + index);
 
 let log = logger.getLogger("start");
 
