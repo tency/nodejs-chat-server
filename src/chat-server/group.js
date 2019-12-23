@@ -77,10 +77,10 @@ module.exports = class Group {
                 let userData = users[0];
                 if (userData) {
                     let newMember = {
-                        id: user.getId(),
-                        username: user.getNick(),
-                        avatar: user.getAvatar(),
-                        sign: user.getSign(),
+                        id: userData.id,
+                        username: userData.username,
+                        avatar: userData.avatar,
+                        sign: userData.sign,
                     }
                     this.members.push(newMember);
                     if (this.members.length == this.groupData.members.length) {

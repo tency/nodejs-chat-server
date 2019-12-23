@@ -197,10 +197,10 @@ module.exports = class User {
                 let userData = users[0];
                 if (userData) {
                     let newFriend = {
-                        id: user.getId(),
-                        username: user.getNick(),
-                        avatar: user.getAvatar(),
-                        sign: user.getSign(),
+                        id: userData.id,
+                        username: userData.username,
+                        avatar: userData.avatar,
+                        sign: userData.sign,
                         status: "online"
                     }
                     this.friendList.push(newFriend);
