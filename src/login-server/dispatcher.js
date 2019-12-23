@@ -70,12 +70,27 @@ module.exports = class Dispatcher {
             log.info("on message CS2L_NOTIFY_CHAT");
             log.info(data);
 
-            const user = userMgr.getUser(data.id);
-            if (user) {
-                let connID = user.getConnId();
-                network.connector.message(connID, MSG_ID.L2C_NOTIFY_CHAT, data.chat);
-            } else {
-                log.error("cant find user, id = %s", data.id);
+            if (data.to && data.to.type) {
+                if (data.to.type == "group") {
+                    // 群组聊天
+                    // 遍历members，看是否在本loginserver
+                    for (let i = 0; i < data.to.members.length; i++) {
+                        const user = userMgr.getUser(data.to.members[i]);
+                        if (user) {
+                            let connID = user.getConnId();
+                            network.connector.message(connID, MSG_ID.L2C_NOTIFY_CHAT, data);
+                        }
+                    }
+                } else if (data.to.type == "friend") {
+                    // 好友聊天
+                    const user = userMgr.getUser(data.to.id);
+                    if (user) {
+                        let connID = user.getConnId();
+                        network.connector.message(connID, MSG_ID.L2C_NOTIFY_CHAT, data);
+                    } else {
+                        log.error("cant find user, id = %s", data.id);
+                    }
+                }
             }
         });
     }

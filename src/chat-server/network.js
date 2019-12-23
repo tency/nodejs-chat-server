@@ -75,9 +75,6 @@ class Network extends EventEmitter {
 
     // 通知消息到login
     messageLogin(loginID, msgId, data) {
-        log.debug("messageLogin loginID = %d, msgId = %d", loginID, msgId);
-        log.debug(this.loginList)
-        log.info(data)
         if (this.loginList[loginID]) {
             let conID = this.loginList[loginID].conID;
             this.connector.message(conID, msgId, data);
@@ -88,7 +85,7 @@ class Network extends EventEmitter {
     broadcastToLogin(msgId, data) {
         for (const id in this.loginList) {
             let conID = this.loginList[id].conID;
-            connector.message(conID, msgId, data);
+            this.connector.message(conID, msgId, data);
         }
     }
 }

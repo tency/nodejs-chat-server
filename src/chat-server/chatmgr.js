@@ -1,6 +1,8 @@
 'use strict';
 
 const log = logger.getLogger("chatmgr");
+const ErrCode = require("../common/define").ErrCode;
+const MSG_ID = require("../common/define").MSG_ID;
 
 // 聊天管理器
 class ChatMgr {
@@ -24,7 +26,32 @@ class ChatMgr {
 
     // 处理聊天信息
     handleSendChat(conID, data, callback) {
+        log.debug(data);
 
+        data.mine.mine = false;
+        if (data.to.type == "group") {
+            // 群组聊天
+            let group = groupMgr.getGroup(data.to.id);
+            if (group) {
+                network.broadcastToLogin(MSG_ID.CS2L_NOTIFY_CHAT, data);
+            } else {
+                callback && callback(ErrCode.FAILED, "group not exist!");
+            }
+        } else if (data.to.type == "friend") {
+            // 好友聊天
+            let user = userMgr.getUser(data.to.id);
+            if (user) {
+                if (user.hasFriend(data.mine.id)) {
+                    // 已经是好友
+                    network.messageLogin(user.getLoginID(), MSG_ID.CS2L_NOTIFY_CHAT, data);
+                } else {
+                    // 还不是好友
+                    callback && callback(ErrCode.FAILED, "not friend!");
+                }
+            } else {
+                callback && callback(ErrCode.FAILED, "user not exist!");
+            }
+        }
     }
 }
 
