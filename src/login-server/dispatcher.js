@@ -68,8 +68,6 @@ module.exports = class Dispatcher {
         // 通知聊天消息
         network.chatWS.on(MSG_ID.CS2L_NOTIFY_CHAT, (data) => {
             log.info("on message CS2L_NOTIFY_CHAT");
-            log.info(data);
-
             if (data.to && data.to.type) {
                 if (data.to.type == "group") {
                     // 群组聊天

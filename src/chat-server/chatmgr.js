@@ -33,6 +33,7 @@ class ChatMgr {
             // 群组聊天
             let group = groupMgr.getGroup(data.to.id);
             if (group) {
+                data.to.members = group.getGroupData().members;
                 network.broadcastToLogin(MSG_ID.CS2L_NOTIFY_CHAT, data);
             } else {
                 callback && callback(ErrCode.FAILED, "group not exist!");
