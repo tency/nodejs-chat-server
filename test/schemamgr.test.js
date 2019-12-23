@@ -1,6 +1,9 @@
 const SchemaMgr = require("../src/common/schemamgr");
 
-const schemaMgr = new SchemaMgr();
-schemaMgr.loadAllSchema("../src/schema");
-const userSchema = schemaMgr.getSchema("user");
-console.log(userSchema);
+describe("SchemaMgr.loadAllSchema", () => {
+    it("should return true", () => {
+        const schemaMgr = new SchemaMgr();
+        expect(schemaMgr.loadAllSchema("./src/schema")).toBe(true);
+        expect(schemaMgr.getSchema("user")).not.toBeNull();
+    });
+});

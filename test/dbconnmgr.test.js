@@ -5,12 +5,15 @@ logger.setupLog("dbconn test");
 
 const DBConnectionMgr = require("../src/common/dbconnmgr");
 
-const dbConMgr = new DBConnectionMgr();
-dbConMgr.init("../src/schema", "../src/dbcfg/dbcfg")
-    .then(() => {
-        console.log('db init callback');
-        let connectionName = "connection_1";
-        const connection = dbConMgr.getConnection(connectionName);
-        const userModel = connection.getModel("user");
-        console.log(userModel);
+describe("DBConnectionMgr.init", () => {
+    it("should resolved", () => {
+        const dbConnMgr = new DBConnectionMgr();
+        return expect(
+            dbConnMgr.init("./src/schema", "./src/dbcfg/dbcfg")
+            .then(() => {
+                expect(dbConnMgr.getConnection("connection_1")).not.toBeNull();
+                dbConnMgr.disconnectAll();
+            })
+        ).resolves.toBeUndefined();
     });
+});

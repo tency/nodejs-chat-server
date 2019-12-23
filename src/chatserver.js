@@ -2,6 +2,7 @@ global.logger = require("./common/logger");
 //global.logger = require("./common/logger-winston");
 logger.setupLog("chatServer", "debug");
 
+const path = require("path");
 let log = logger.getLogger("start");
 const Utility = require("./common/utility");
 
@@ -28,7 +29,8 @@ class ChatServer extends Server {
                 return cacheMgr.init();
             })
             .then(() => {
-                stringFilter.loadFilterWords("list.txt", () => {
+                const fullpath = path.join(process.cwd(), "./data/list.txt");
+                stringFilter.loadFilterWords(fullpath, () => {
                     network.init(Config.chatHost, Config.chatPort);
                     userMgr.init();
                     groupMgr.init();

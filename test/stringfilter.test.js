@@ -1,24 +1,25 @@
 'use strict';
-
 global.logger = require("../src/common/logger");
-logger.setupLog("string filter");
-
+logger.setupLog("test");
+const log = logger.getLogger("stringfiltertest");
 const stringfilter = require("../src/common/stringfilter");
-stringfilter.loadFilterWords("filter.txt", () => {
+const path = require("path");
 
-    // test
-    for (let i = 0; i < 10; i++) {
-        const str = "goodbitch fck like func fuc";
-        let ret = stringfilter.test(str);
-    }
+test("string filter test", () => {
+    const fullpath = path.join(process.cwd(), "./src/data/list.txt");
+    stringfilter.loadFilterWords(fullpath, () => {
 
-    // replace test
-    let targetString = "fuck the world, this  is bitch thing! F_U_C_Kfuck";
-    let replaceStr = "***";
-    let afterStr = stringfilter.replace(targetString, replaceStr);
-    console.log(afterStr)
+        // test
+        const str = "goodbitch fck like func fuck";
+        expect(stringfilter.test(str)).toBe(true);
 
-    // match test
-    let hitWords = stringfilter.match(targetString);
-    console.log(hitWords);
+        // replace test
+        let targetString = "fuck the world, this  is bitch thing! F_U_C_Kfuck";
+        let replaceStr = "***";
+        let afterStr = stringfilter.replace(targetString, replaceStr);
+
+        // match test
+        let matchWords = stringfilter.match(targetString);
+        expect(matchWords["fuck"]).toBeGreaterThan(0);
+    });
 });

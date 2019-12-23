@@ -19,8 +19,7 @@ class StringFilter {
     }
 
     // 加载敏感词列表
-    loadFilterWords(filename, callback) {
-        const fullpath = path.join(process.cwd(), "../src/data", filename);
+    loadFilterWords(fullpath, callback) {
         fs.readFile(fullpath, "utf-8", (err, data) => {
             if (err) {
                 log.error(err);
