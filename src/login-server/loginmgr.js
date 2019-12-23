@@ -17,33 +17,37 @@ class LoginMgr {
 
     // 处理登录
     handleUserLogin(conID, data, callback) {
-        if (data.account == '') {
-            // 账号为空，新建游客账号
-            this.createNewUser(conID, data.account, data.pwd, callback);
-        } else {
-            dbMgr.getDbPlat().findOne({
-                _id: data.account
-            }, (err, result) => {
-                log.debug('findOne err = ' + err)
-                if (err) {
-                    callback(ErrCode.FAILED);
-                } else if (!result) {
-                    // 账号不存在，自动注册
-                    log.warn('can not find openid = %s, so create new one!', data.account);
-                    this.createNewUser(conID, data.account, data.pwd, callback);
-                } else {
-                    log.info('data.pwd = %s', data.pwd)
-                    log.info('result.password = %s', result.password)
-                    if (Md5(data.pwd) == result.password) {
-                        log.info('login succeed');
-
-                        this.requestLoginChatServer(conID, result.id, result.openid, callback);
+        try {
+            if (data.account == '') {
+                // 账号为空，新建游客账号
+                this.createNewUser(conID, data.account, data.pwd, callback);
+            } else {
+                dbMgr.getDbPlat().findOne({
+                    _id: data.account
+                }, (err, result) => {
+                    log.debug('findOne err = ' + err)
+                    if (err) {
+                        callback(ErrCode.FAILED);
+                    } else if (!result) {
+                        // 账号不存在，自动注册
+                        log.warn('can not find openid = %s, so create new one!', data.account);
+                        this.createNewUser(conID, data.account, data.pwd, callback);
                     } else {
-                        // 密码错误
-                        callback(ErrCode.PASSWORDERROR);
+                        log.info('data.pwd = %s', data.pwd)
+                        log.info('result.password = %s', result.password)
+                        if (Md5(data.pwd) == result.password) {
+                            log.info('login succeed');
+
+                            this.requestLoginChatServer(conID, result.id, result.openid, callback);
+                        } else {
+                            // 密码错误
+                            callback(ErrCode.PASSWORDERROR);
+                        }
                     }
-                }
-            });
+                });
+            }
+        } catch (error) {
+            log.error(error.stack);
         }
     }
 
