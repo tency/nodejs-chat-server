@@ -35,6 +35,7 @@ module.exports = class Group {
         }
 
         this.groupData.members.push(id);
+        this.setDirty();
         this.addMemberInfo(id, (member) => {
             callback && callback(member);
         });
@@ -50,6 +51,7 @@ module.exports = class Group {
         let index = this.groupData.members.indexOf(id)
         if (index >= 0) {
             this.groupData.members.splice(index, 1);
+            this.setDirty();
             this.removeMemberInfo(id);
         }
     }
@@ -120,7 +122,7 @@ module.exports = class Group {
     // force 是否强制保存，不等时间间隔
     save(force, callback) {
         // 控制保存间隔
-        if (!force && Utility.getTime() - this.lastSaveTime < 30) {
+        if (!force && Utility.getTime() - this.lastSaveTime < 10) {
             return;
         }
 
@@ -135,6 +137,7 @@ module.exports = class Group {
                     group.set('members', this.groupData.members);
                     group.set("groupname", this.groupData.groupname);
                     group.save(null, callback);
+                    log.debug("save group");
                 });
         }
     }

@@ -118,7 +118,7 @@ module.exports = class User {
     }
 
     save(force, callback) {
-        if (!force && Utility.getTime() - this.lastSaveTime < 30) {
+        if (!force && Utility.getTime() - this.lastSaveTime < 10) {
             return;
         }
 

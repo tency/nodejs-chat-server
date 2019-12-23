@@ -20,7 +20,7 @@ class GroupMgr {
                 for (let i = 0; i < groups.length; i++) {
                     let groupData = groups[i];
                     if (groupData) {
-                        this.createGroup(groupData);
+                        this.loadGroup(groupData);
                     }
                 }
 
@@ -63,6 +63,20 @@ class GroupMgr {
     }
 
     createGroup(groupData) {
+        if (this.hasGroup(groupData.id)) {
+            return;
+        }
+
+        dbMgr.getGroupModel().create(groupData)
+            .then(() => {
+                let newGroup = new Group();
+                newGroup.init(groupData);
+                newGroup.onCreate();
+                this.groupList[groupData.id] = newGroup;
+            });
+    }
+
+    loadGroup(groupData) {
         if (this.hasGroup(groupData.id)) {
             return;
         }
