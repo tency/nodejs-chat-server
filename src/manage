@@ -178,11 +178,11 @@ clean() {
 
 if [ $# -ge 2 ]; then
     case "$2" in
-        loginserver|chatserver)
+        chatserver|loginserver|webserver)
             server=$2
             ;;
         *)
-            echo "arg 2 should in [loginserver|chatserver]"
+            echo "arg 2 should in [loginserver|chatserver|webserver]"
             exit 1
     esac
 fi
@@ -209,7 +209,7 @@ case "$1" in
         clean
         ;;
   *)
-        echo $"Usage: manage {start|stop|restart|status} [loginserver|chatserver]"
+        echo $"Usage: manage {start|stop|restart|status} [loginserver|chatserver|webserver]"
         exit 1
 esac
 
