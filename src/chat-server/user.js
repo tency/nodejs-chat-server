@@ -19,6 +19,7 @@ module.exports = class User {
         this.loginID = 0; // 玩家所在的login server id
         this.dirty = 0; //按位更新
         this.offlineTime = 0; // 记录一下离线时间，离线超过一定时间再从管理器中移除
+        this.lastSaveTime = 0; // 上一次保存时间，为了控制保存的频率
     }
 
     init(id, openid, username, loginid) {
@@ -26,12 +27,21 @@ module.exports = class User {
         this.userData.openid = openid;
         this.userData.username = username;
         this.loginID = loginid;
+        this.lastSaveTime = Utility.getTime();
     }
 
     initWithData(data, loginid) {
         this.userData = data;
         this.friendList = []; // 好友的信息，friends只存了好友id，这里缓存好友的一些信息
         this.loginID = loginid;
+        this.lastSaveTime = Utility.getTime();
+    }
+
+    onTick() {
+        this.save(false, () => {
+            this.dirty = 0;
+            this.lastSaveTime = Utility.getTime();
+        })
     }
 
     getUserData() {
@@ -97,41 +107,48 @@ module.exports = class User {
     onRemove() {
         log.debug("on user remove, id = %d", this.userData.id);
         if (this.dirty > 0) {
-            this.save(() => {
+            this.save(true, () => {
                 // 保存完设置为0
                 this.dirty = 0;
                 this.offlineTime = Utility.getTime();
+                this.lastSaveTime = this.offlineTime;
                 log.debug("user save finish, id = %d", this.userData.id);
             });
         }
     }
 
-    save(callback) {
-        dbMgr.getUserModel().find({
-                id: this.userData.id
-            })
-            .then(users => {
-                let user = users[0];
+    save(force, callback) {
+        if (!force && Utility.getTime() - this.lastSaveTime < 30) {
+            return;
+        }
 
-                // 修改要保存的项
-                if (this.dirty & 1 != 0) {
-                    user.set("loginIp", this.userData.loginIp);
-                }
-                if (this.dirty & 2 != 0) {
-                    user.set('username', this.userData.username);
-                }
-                if (this.dirty & 4 != 0) {
-                    user.set('avatar', this.userData.avatar);
-                }
-                if (this.dirty & 8 != 0) {
-                    user.set('sign', this.userData.sign);
-                }
-                if (this.dirty & 16 != 0) {
-                    user.set('friends', this.userData.friends);
-                }
+        if (this.dirty > 0) {
+            dbMgr.getUserModel().find({
+                    id: this.userData.id
+                })
+                .then(users => {
+                    let user = users[0];
 
-                user.save(null, callback);
-            });
+                    // 修改要保存的项
+                    if (this.dirty & 1 != 0) {
+                        user.set("loginIp", this.userData.loginIp);
+                    }
+                    if (this.dirty & 2 != 0) {
+                        user.set('username', this.userData.username);
+                    }
+                    if (this.dirty & 4 != 0) {
+                        user.set('avatar', this.userData.avatar);
+                    }
+                    if (this.dirty & 8 != 0) {
+                        user.set('sign', this.userData.sign);
+                    }
+                    if (this.dirty & 16 != 0) {
+                        user.set('friends', this.userData.friends);
+                    }
+
+                    user.save(null, callback);
+                });
+        }
     }
 
     // 获取好友列表
@@ -192,7 +209,7 @@ module.exports = class User {
                         callback && callback(newFriend);
                     }
                 }
-            });;
+            });
         }
     }
 

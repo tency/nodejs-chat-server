@@ -52,6 +52,7 @@ class LoginMgr {
                 let retData = {};
                 retData.mine = user.getUserData();
                 retData.friendList = friendList;
+                retData.groupList = groupMgr.getGroupList()
                 callback && callback(ErrCode.SUCCESS, retData);
             })
         } else {
@@ -65,6 +66,7 @@ class LoginMgr {
                         let retData = {};
                         retData.mine = userData;
                         retData.friendList = friendList;
+                        retData.groupList = groupMgr.getGroupList()
                         callback && callback(ErrCode.SUCCESS, retData);
                     })
                 });

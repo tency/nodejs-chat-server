@@ -17,6 +17,12 @@ class UserMgr {
         log.debug("user mgr init");
     }
 
+    onTick() {
+        for (let id in this.userList) {
+            this.userList[id].onTick();
+        }
+    }
+
     getUser(id) {
         return this.userList[id];
     }
@@ -26,6 +32,9 @@ class UserMgr {
         newUser.initWithData(initData, loginId);
         newUser.onCreate();
         this.userList[initData.id] = newUser;
+
+        // 添加到系统群组
+        groupMgr.addMember(1, initData.id);
     }
 
     // 从数据库数据构造用户
@@ -35,6 +44,9 @@ class UserMgr {
         newUser.onCreate();
         this.userList[userData.id] = newUser;
         callback && callback(newUser);
+
+        // 添加到系统群组
+        groupMgr.addMember(1, userData.id);
     }
 
     removeUser(id) {

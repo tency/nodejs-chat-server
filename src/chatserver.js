@@ -3,6 +3,7 @@ global.logger = require("./common/logger");
 logger.setupLog("chatServer", "debug");
 
 let log = logger.getLogger("start");
+const Utility = require("./common/utility");
 
 global.network = require("./chat-server/network");
 global.userMgr = require("./chat-server/usermgr");
@@ -39,8 +40,15 @@ class ChatServer extends Server {
         this.init(() => {
             super.startup();
             network.startup();
+            setInterval(this.onTick, 1000);
             log.info('ChatServer startup...');
         })
+    }
+
+    onTick() {
+        //log.debug("on tick, time = %d", Utility.getTime());
+        userMgr.onTick();
+        groupMgr.onTick();
     }
 }
 
