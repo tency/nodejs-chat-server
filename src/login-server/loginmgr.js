@@ -121,7 +121,7 @@ class LoginMgr {
         };
 
         network.requestChat(MSG_ID.L2CS_USER_CREATE, userData, (err, data) => {
-            log.info('receive chat server resp');
+            log.debug('receive chat server resp');
 
             // 传给客户端的是明文密码，可以让客户端展示出来
             if (pwd) {
@@ -164,7 +164,7 @@ class LoginMgr {
         };
 
         network.requestChat(MSG_ID.L2CS_USER_GET, userData, (err, data) => {
-            log.info('receive chat server resp, err = %s', err);
+            log.debug('receive chat server resp, err = %s', err);
 
             let user = userMgr.getUser(data.mine.id);
             if (user) {
@@ -182,7 +182,7 @@ class LoginMgr {
 
     // 客户端断开
     onClientDisconnect(conID, code, reason) {
-        log.info('onClientDisconnect conID = ' + conID + ', code = ' + code + ', reason = ' + reason);
+        log.debug('onClientDisconnect conID = ' + conID + ', code = ' + code + ', reason = ' + reason);
         let id = this.connMap[conID];
         if (id) {
             // 通知chat server客户端断开
