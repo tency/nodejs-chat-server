@@ -100,7 +100,7 @@ module.exports = class User {
     }
 
     setDirty(index) {
-        this.dirty &= (1 << index);
+        this.dirty |= (1 << index);
     }
 
     onCreate() {
@@ -122,7 +122,7 @@ module.exports = class User {
     }
 
     save(force, callback) {
-        if (!force && Utility.getTime() - this.lastSaveTime < 10) {
+        if (!force && Utility.getTime() < this.lastSaveTime + 10) {
             return;
         }
 
@@ -134,19 +134,20 @@ module.exports = class User {
                     let user = users[0];
 
                     // 修改要保存的项
-                    if (this.dirty & 1 != 0) {
+                    if ((this.dirty & 1) != 0) {
                         user.set("loginIp", this.userData.loginIp);
                     }
-                    if (this.dirty & 2 != 0) {
+                    if ((this.dirty & 2) != 0) {
                         user.set('username', this.userData.username);
                     }
-                    if (this.dirty & 4 != 0) {
+                    if ((this.dirty & 4) != 0) {
                         user.set('avatar', this.userData.avatar);
                     }
-                    if (this.dirty & 8 != 0) {
+                    if ((this.dirty & 8) != 0) {
+                        log.debug("update sign = " + this.userData.sign);
                         user.set('sign', this.userData.sign);
                     }
-                    if (this.dirty & 16 != 0) {
+                    if ((this.dirty & 16) != 0) {
                         user.set('friends', this.userData.friends);
                     }
 
