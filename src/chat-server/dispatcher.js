@@ -54,5 +54,11 @@ module.exports = class Dispatcher {
             log.info("on message W2CS_GET_GROUP_MEMBERS");
             groupMgr.handleGetMembers(conID, data, callback);
         });
+
+        // 处理聊天消息
+        network.connector.on(MSG_ID.L2CS_SEND_CHAT, (conID, data, callback) => {
+            log.info("on message L2CS_SEND_CHAT");
+            chatMgr.handleSendChat(conID, data, callback);
+        });
     }
 }

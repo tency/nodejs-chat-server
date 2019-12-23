@@ -10,6 +10,7 @@ global.network = require("./login-server/network");
 global.userMgr = require("./login-server/usermgr");
 global.dbMgr = require("./login-server/dbmgr");
 global.loginMgr = require("./login-server/loginmgr");
+global.chatMgr = require("./login-server/chatmgr");
 global.stringFilter = require("./common/stringfilter");
 
 const Server = require("./common/server");
@@ -30,6 +31,7 @@ class LoginServer extends Server {
                     network.setLoginID(_serverId);
                     userMgr.init();
                     loginMgr.init();
+                    chatMgr.init();
                     callback();
                 });
             });

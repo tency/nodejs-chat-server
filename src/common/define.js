@@ -21,9 +21,11 @@ exports.MSG_ID = {
     C2L_MODIFY_AVATAR: "10004", // 修改头像
     C2L_MODIFY_NICK: "10005", // 修改昵称
     C2L_ADD_FRIEND: "10006", // 添加好友
+    C2L_SEND_CHAT: "10007", // 发送聊天消息
 
     // login server to client
     L2C_ADD_FRIEND: "20001", // 添加好友通知
+    L2C_NOTIFY_CHAT: "20002", // 通知聊天消息
 
     // login server to chat server
     L2CS_USER_CREATE: "30001",
@@ -33,9 +35,11 @@ exports.MSG_ID = {
     L2CS_MODIFY_AVATAR: "30005", // 修改头像
     L2CS_MODIFY_NICK: "30006", // 修改昵称
     L2CS_ADD_FRIEND: "30007", // 添加好友
+    L2CS_SEND_CHAT: "30008", // 发送聊天消息
 
     // chat server to login server
     CS2L_ADD_FRIEND: "40001", // 添加好友通知
+    CS2L_NOTIFY_CHAT: "40002", // 通知聊天消息
 
     // web to chat server
     W2CS_GET_GROUP_MEMBERS: "50001", // 获取群成员

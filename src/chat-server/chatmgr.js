@@ -23,17 +23,7 @@ class ChatMgr {
     }
 
     // 处理聊天信息
-    handleChat(conID, data, callback) {
-
-    }
-
-    // 添加好友
-    handleAddFriend(conID, data, callback) {
-
-    }
-
-    // 删除好友
-    handleRemoveFriend(conID, data, callback) {
+    handleSendChat(conID, data, callback) {
 
     }
 }
