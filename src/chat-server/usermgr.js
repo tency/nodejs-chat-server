@@ -52,12 +52,12 @@ class UserMgr {
         newUser.initWithData(userData, loginId);
         newUser.onCreate();
         this.userList[userData.id] = newUser;
-        callback && callback(newUser);
 
         // 添加到系统群组
         groupMgr.addMember(1, userData.id);
-
         this.username2id[userData.username] = userData.id;
+
+        callback && callback(newUser);
     }
 
     removeUser(id) {

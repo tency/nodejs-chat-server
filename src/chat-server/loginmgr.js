@@ -38,6 +38,7 @@ class LoginMgr {
                 let retData = {};
                 retData.mine = initData;
                 retData.friendList = [];
+                retData.groupList = groupMgr.getGroupList()
                 callback(ErrCode.SUCCESS, retData);
             });
     }
