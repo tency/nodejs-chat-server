@@ -85,9 +85,9 @@ class ChatMgr {
                         network.messageLogin(user.getLoginID(), MSG_ID.CS2L_NOTIFY_CHAT, data);
 
                         let key = this.getLogId(data.mine.id, data.to.id);
-                        this.addChatLog(key, data);
+                        this.addFriendChatLog(key, data);
 
-                        callback && callback(ErrCode.SUCCESS, "send chat suss!");
+                        callback && callback(ErrCode.SUCCESS, data);
                     } else {
                         // 还不是好友
                         callback && callback(ErrCode.FAILED, "not friend!");
