@@ -18,6 +18,7 @@ module.exports = class User {
 
         this.loginID = 0; // 玩家所在的login server id
         this.dirty = 0; //按位更新
+        this.loginTime = 0; // 上线时间
         this.offlineTime = 0; // 记录一下离线时间，离线超过一定时间再从管理器中移除
         this.lastSaveTime = 0; // 上一次保存时间，为了控制保存的频率
     }
@@ -28,6 +29,7 @@ module.exports = class User {
         this.userData.username = username;
         this.loginID = loginid;
         this.lastSaveTime = Utility.getTime();
+        this.loginTime = Utility.getTime();
     }
 
     initWithData(data, loginid) {
@@ -35,6 +37,7 @@ module.exports = class User {
         this.friendList = []; // 好友的信息，friends只存了好友id，这里缓存好友的一些信息
         this.loginID = loginid;
         this.lastSaveTime = Utility.getTime();
+        this.loginTime = Utility.getTime();
     }
 
     onTick() {
@@ -112,6 +115,7 @@ module.exports = class User {
                 this.dirty = 0;
                 this.offlineTime = Utility.getTime();
                 this.lastSaveTime = this.offlineTime;
+                this.loginTime = 0;
                 log.debug("user save finish, id = %d", this.userData.id);
             });
         }
@@ -248,5 +252,13 @@ module.exports = class User {
             this.removeFriendInfo(id);
             this.setDirty(4);
         }
+    }
+
+    // 获取本次在线时间
+    getOnlineTime() {
+        if (this.loginTime == 0) {
+            return 0;
+        }
+        return Utility.getTime() - this.loginTime;
     }
 }

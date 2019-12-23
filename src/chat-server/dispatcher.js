@@ -60,5 +60,23 @@ module.exports = class Dispatcher {
             log.info("on message L2CS_SEND_CHAT");
             chatMgr.handleSendChat(conID, data, callback);
         });
+
+        // 处理聊天记录
+        network.connector.on(MSG_ID.L2CS_GET_LOG, (conID, data, callback) => {
+            log.info("on message L2CS_GET_LOG");
+            chatMgr.handleGetLog(conID, data, callback);
+        });
+
+        // 处理获取最受欢迎的词
+        network.connector.on(MSG_ID.W2CS_GET_POPULAR_WORD, (conID, data, callback) => {
+            log.info("on message W2CS_GET_POPULAR_WORD");
+            groupMgr.handleGetPopularWord(conID, data, callback);
+        });
+
+        // 处理获取用户状态
+        network.connector.on(MSG_ID.W2CS_GET_USER_STATUS, (conID, data, callback) => {
+            log.info("on message W2CS_GET_USER_STATUS");
+            groupMgr.handleGetUserStatus(conID, data, callback);
+        });
     }
 }

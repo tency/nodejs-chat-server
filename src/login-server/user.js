@@ -27,6 +27,10 @@ module.exports = class User {
         return this.connId;
     }
 
+    setConnId(conid) {
+        this.connId = conid;
+    }
+
     onCreate() {
         log.info("on create user, id = ", this.id);
     }

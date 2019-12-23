@@ -11,6 +11,8 @@ module.exports = class Group {
         this.members = [];
         this.dirty = false;
         this.lastSaveTime = 0; // 上一次保存时间，为了控制保存的频率
+
+        this.chatLog = []; // 该群组的聊天记录
     }
 
     init(data) {
@@ -25,6 +27,20 @@ module.exports = class Group {
 
     getMembers() {
         return this.members;
+    }
+
+    getChatLog() {
+        return this.chatLog;
+    }
+
+    // 添加聊天记录
+    addChatLog(chat) {
+        this.chatLog.push(chat);
+
+        // 只保留最新50条
+        if (this.chatLog.length > 50) {
+            this.chatLog.splice(0, 1);
+        }
     }
 
     // 添加成员

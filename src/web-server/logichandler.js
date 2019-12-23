@@ -19,6 +19,8 @@ class LogicHandler {
                 res.write(JSON.stringify(data));
                 callback && callback();
             });
+        } else if (pathname == "/popular") {
+
         } else {
             res.write("nothing to do");
             callback && callback();

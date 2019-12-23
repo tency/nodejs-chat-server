@@ -12,6 +12,7 @@ global.dbMgr = require("./chat-server/dbMgr");
 global.loginMgr = require("./chat-server/loginmgr");
 global.cacheMgr = require("./chat-server/cachemgr");
 global.chatMgr = require("./chat-server/chatmgr");
+global.stringFilter = require("./common/stringfilter");
 
 const Server = require("./common/server");
 const Config = require("./config");
@@ -27,12 +28,14 @@ class ChatServer extends Server {
                 return cacheMgr.init();
             })
             .then(() => {
-                network.init(Config.chatHost, Config.chatPort);
-                userMgr.init();
-                groupMgr.init();
-                loginMgr.init();
-                chatMgr.init();
-                callback && callback();
+                stringFilter.loadFilterWords("list.txt", () => {
+                    network.init(Config.chatHost, Config.chatPort);
+                    userMgr.init();
+                    groupMgr.init();
+                    loginMgr.init();
+                    chatMgr.init();
+                    callback && callback();
+                });
             });
     }
 
@@ -47,8 +50,10 @@ class ChatServer extends Server {
 
     onTick() {
         //log.debug("on tick, time = %d", Utility.getTime());
+        const curTime = Utility.getTime();
         userMgr.onTick();
         groupMgr.onTick();
+        cacheMgr.onTick(curTime);
     }
 }
 

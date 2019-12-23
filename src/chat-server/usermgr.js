@@ -11,6 +11,9 @@ class UserMgr {
     constructor() {
         log.debug("user mgr constructor");
         this.userList = {};
+
+        // username 与id对应表
+        this.username2id = {};
     }
 
     init() {
@@ -27,6 +30,10 @@ class UserMgr {
         return this.userList[id];
     }
 
+    getUserByName(username) {
+        return this.getUser(this.username2id[username]);
+    }
+
     createUser(initData, loginId) {
         let newUser = new User();
         newUser.initWithData(initData, loginId);
@@ -35,6 +42,8 @@ class UserMgr {
 
         // 添加到系统群组
         groupMgr.addMember(1, initData.id);
+
+        this.username2id[initData.username] = initData.id;
     }
 
     // 从数据库数据构造用户
@@ -47,6 +56,8 @@ class UserMgr {
 
         // 添加到系统群组
         groupMgr.addMember(1, userData.id);
+
+        this.username2id[userData.username] = userData.id;
     }
 
     removeUser(id) {
@@ -123,6 +134,10 @@ class UserMgr {
         } else {
             callback && callback(ErrCode.FAIL);
         }
+    }
+
+    handleGetUserStatus(conID, data, callback) {
+
     }
 }
 

@@ -52,6 +52,12 @@ module.exports = class Dispatcher {
             chatMgr.handleSendChat(conID, data, callback);
         });
 
+        // 处理获取聊天记录请求
+        network.connector.on(MSG_ID.C2L_GET_LOG, (conID, data, callback) => {
+            log.info("on message C2L_GET_LOG");
+            chatMgr.handleGetLog(conID, data, callback);
+        });
+
         //==== chat server 过来的消息
         network.chatWS.on(MSG_ID.CS2L_ADD_FRIEND, (data) => {
             log.info("on message CS2L_ADD_FRIEND");

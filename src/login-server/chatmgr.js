@@ -15,10 +15,11 @@ class ChatMgr {
 
     // 处理聊天信息
     handleSendChat(conID, data, callback) {
-        // 先对聊天内容进行过滤
-        data.mine.content = stringFilter.replace(data.mine.content, "***");
-
         network.requestChat(MSG_ID.L2CS_SEND_CHAT, data, callback);
+    }
+
+    handleGetLog(conID, data, callback) {
+        network.requestChat(MSG_ID.L2CS_GET_LOG, data, callback);
     }
 }
 
