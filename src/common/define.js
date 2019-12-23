@@ -36,4 +36,7 @@ exports.MSG_ID = {
 
     // chat server to login server
     CS2L_ADD_FRIEND: "40001", // 添加好友通知
+
+    // web to chat server
+    W2CS_GET_GROUP_MEMBERS: "50001", // 获取群成员
 }

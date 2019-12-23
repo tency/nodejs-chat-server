@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const log = logger.getLogger("string filter");
+const log = logger.getLogger("StrinFilter");
 const kmpMathcher = require("./kmp-matcher");
 
 class StringFilter {
