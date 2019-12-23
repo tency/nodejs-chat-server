@@ -48,5 +48,11 @@ module.exports = class Dispatcher {
             log.info("on message L2CS_ADD_FRIEND");
             userMgr.handleAddFriend(conID, data, callback);
         });
+
+        // 处理获取群成员
+        network.connector.on(MSG_ID.W2CS_GET_GROUP_MEMBERS, (conID, data, callback) => {
+            log.info("on message W2CS_GET_GROUP_MEMBERS");
+            groupMgr.handleGetMembers(conID, data, callback);
+        });
     }
 }

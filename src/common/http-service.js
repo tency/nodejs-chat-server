@@ -1,9 +1,6 @@
 const http = require('http');
 const https = require('https');
-const util = require('util');
 const fs = require('fs');
-var url = require('url');
-var qs = require('querystring');
 const Config = require("../config");
 const log = logger.getLogger("HttpService");
 
@@ -45,40 +42,14 @@ class HttpService {
             });
 
             req.on('end', function () {
-                // 解析请求，包括文件名
-                var pathname = url.parse(req.url).pathname;
-                log.debug("pathname = %s", pathname);
-
                 res.writeHead(200, {
                     'Content-Type': 'application/json;charset=UTF-8'
                 });
 
-                // 响应文件内容
-                if (pathname == "/getmember") {
-                    let retData = {
-                        "code": 0,
-                        "msg": "",
-                        "data": {
-                            "list": [{
-                                "username": "贤心",
-                                "id": "100001",
-                                "avatar": "//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg",
-                                "sign": "这些都是测试数据，实际使用请严格按照该格式返回"
-                            }, {
-                                "username": "Z_子晴",
-                                "id": "108101",
-                                "avatar": "//tva1.sinaimg.cn/crop.0.23.1242.1242.180/8693225ajw8fbimjimpjwj20yi0zs77l.jpg",
-                                "sign": "微电商达人"
-                            }]
-                        }
-                    }
-
-                    res.write(JSON.stringify(retData));
-                } else {
-                    res.write("nothing to do");
-                }
-                //  发送响应数据
-                res.end();
+                handler(req, res, () => {
+                    //  发送响应数据
+                    res.end();
+                })
             });
         };
 
