@@ -5,7 +5,7 @@
 ![聊天预览](http://www.tap2joy.com/upload/chat_friend.png) 
 
 
-1.服务器架构
+1.分布式服务器架构
 	n * loginserver + chatserver + webserver
 	
 	loginserver 负责登录验证，消息转发，维护客户端链接
