@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# manage a group of: chatsercer + n*loginserver
+# manage a group of: chatsercer + n*loginserver + webserver
 
 prog="node --expose-gc"
 server=""
@@ -95,6 +95,11 @@ start() {
 	if [ "$server" =  "chatserver" ] || [ "$server" = "" ]; then
         _start chatserver 'chatserver.js'
     fi
+	
+	if [ "$server" =  "webserver" ] || [ "$server" = "" ]; then
+        _start webserver 'webserver.js'
+    fi
+
 
     if [ "$server" =  "loginserver" ] || [ "$server" = "" ]; then
 		for ((c=0; c<$loginCount; c++))
@@ -126,6 +131,10 @@ stop() {
 	if [ "$server" =  "chatserver" ] || [ "$server" = "" ]; then
         _stop chatserver
     fi
+	
+	if [ "$server" =  "webserver" ] || [ "$server" = "" ]; then
+        _stop webserver
+    fi
 }
 
 status() {
@@ -140,6 +149,10 @@ status() {
 	
 	if [ "$server" =  "chatserver" ] || [ "$server" = "" ]; then
         _status chatserver
+    fi
+	
+	if [ "$server" =  "webserver" ] || [ "$server" = "" ]; then
+        _status webserver
     fi
 
     if [ "$server" =  "loginserver" ] || [ "$server" = "" ]; then
@@ -160,7 +173,7 @@ reload() {
 
 clean() {
     # 清理3日前日志
-    find log -mtime +3 -name "*.*" -exec rm -rf {} \;
+    find logs -mtime +3 -name "*.*" -exec rm -rf {} \;
 }
 
 if [ $# -ge 2 ]; then
