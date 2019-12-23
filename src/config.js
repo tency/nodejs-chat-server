@@ -19,6 +19,6 @@ exports.redisHost = '127.0.0.1'; // redies地址
 exports.redisPort = 6379; // redies端口
 exports.redisId = 1;
 
-exports.PHPHost = '127.0.0.1'; // web服地址
-exports.PHPPort = 80; // web服端口
-exports.PHPPath = '/req_from_node.php';
+exports.webHost = '0.0.0.0'; // web服地址
+exports.webPort = 8080; // web服端口
+exports.useSSL = false;
