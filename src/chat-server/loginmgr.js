@@ -77,17 +77,16 @@ class LoginMgr {
 
     // 用户登出
     handleLogoutUser(conID, data, callback) {
-        log.debug(data);
         let id = data.id;
         let user = userMgr.getUser(id);
         if (!user) {
             log.error('can not find user, id = ' + id);
-            callback(ErrCode.FAILED);
+            callback && callback(ErrCode.FAILED);
             return;
         }
 
         userMgr.removeUser(id);
-        callback && callback(err, data);
+        callback && callback(ErrCode.SUCCESS, data);
     }
 
     // 生成一个昵称

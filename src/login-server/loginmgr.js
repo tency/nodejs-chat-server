@@ -139,18 +139,18 @@ class LoginMgr {
                 id: user.getId(),
                 openid: user.getOpenid(),
             }
-            network.requestChat(MSG_ID.GA2G_LOGOUT_USER, reqData, (err, data) => {
-                if (err) {
-                    log.error('user logout chat server failed, openid = %s, err = %s', openid, err);
+            network.requestChat(MSG_ID.L2CS_USER_LOGOUT, reqData, (err, data) => {
+                if (err != ErrCode.SUCCESS) {
+                    log.error('user logout chat server failed, id = %s, err = %s', id, err);
                     callback && callback(ErrCode.FAILED);
                 } else {
-                    log.info('user logout chat server suss, openid = %s', openid);
+                    log.info('user logout chat server suss, id = %s', id);
                     userMgr.removeUser(id);
                     callback && callback(ErrCode.SUCCESS);
                 }
             });
         } else {
-            log.error('can not find user, openid = ' + openid);
+            log.error('can not find user, id = ' + id);
             callback && callback(ErrCode.FAILED);
         }
     }
@@ -174,7 +174,7 @@ class LoginMgr {
                 userMgr.createUser(data.mine.id, data.mine.openid, conID);
             }
 
-            this.connMap[conID] = data.mine.openid;
+            this.connMap[conID] = data.mine.id;
 
             callback && callback(err, data);
         });

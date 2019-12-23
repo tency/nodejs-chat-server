@@ -45,8 +45,9 @@ class Network extends EventEmitter {
         });
 
         // 监听客户端移除
-        this.connector.on("remove_login", (conID) => {
-            log.info("remove login conID = " + conID);
+        this.connector.on("remove_client", (conID) => {
+            log.info("remove client conID = %d", conID);
+            loginMgr.onClientDisconnect(conID);
         });
 
         this.connectToChat(() => {
