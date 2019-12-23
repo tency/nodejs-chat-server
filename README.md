@@ -1,5 +1,6 @@
 # nodejs-chat-server
-	客户端git:https://github.com/tency/chat-client.git
+	客户端 https://github.com/tency/chat-client
+	客户端 git:https://github.com/tency/chat-client.git
 	客户端体验地址：http://www.tap2joy.com/chat/
  
 ![聊天预览](http://www.tap2joy.com/upload/chat_friend.png) 
