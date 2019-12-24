@@ -6,6 +6,7 @@ const http = require("http");
 const https = require("https");
 const PingReq = require("../protocol/ping-req");
 const Utility = require("./utility");
+const NetStatusCode = require("./define").NetStatusCode;
 
 const log = logger.getLogger("ws-server");
 
@@ -82,6 +83,7 @@ module.exports = class WSServer extends EventEmitter {
         const connection = this.id2ConMap[conID];
         if (connection) {
             connection.close(code, reason);
+            log.debug(">>> connection close conid = %d", conID);
             return true;
         }
         return false;
@@ -138,7 +140,8 @@ module.exports = class WSServer extends EventEmitter {
                     log.error("can not find callback of request, id = %s, sn = %s", pkg.reqID, pkg.reqSN);
                 }
             } else {
-                log.error("unknown package: ", pkg);
+                log.error("unknown package: ");
+                log.error(pkg);
             }
         });
 
@@ -186,7 +189,7 @@ module.exports = class WSServer extends EventEmitter {
             pingState.isWaitingForResponse = false;
             pingState.timerID = setTimeout(() => {
                 if (pingState.isWaitingForResponse === true) {
-                    this.disconnect(conID, NetStatusCode.HB_TIMEOUT, NetStatusCode[NetStatusCode.HB_TIMEOUT]);
+                    this.disconnect(conID, NetStatusCode.HB_TIMEOUT, "heart time out");
                 } else {
                     this.ping(conID);
                 }

@@ -181,16 +181,16 @@ class LoginMgr {
     }
 
     // 客户端断开
-    onClientDisconnect(conID, code, reason) {
-        log.debug('onClientDisconnect conID = ' + conID + ', code = ' + code + ', reason = ' + reason);
+    onClientDisconnect(conID) {
+        log.debug('onClientDisconnect conID = %d', conID);
         let id = this.connMap[conID];
         if (id) {
             // 通知chat server客户端断开
-            this.logoutUser(id, () => {
-                log.info("user logout, id = %d", id);
+            this.logoutUser(id, (code) => {
+                log.info("user logout, id = %d, code = ", id, code);
             });
         } else {
-            log.error('onClientDisconnect user not exist, conID = ' + conID);
+            log.error('onClientDisconnect user not exist, conID = %d', conID);
         }
     }
 }
