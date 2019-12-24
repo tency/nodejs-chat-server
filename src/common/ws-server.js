@@ -50,6 +50,12 @@ module.exports = class WSServer extends EventEmitter {
         if (con === undefined) {
             return false;
         }
+
+        // 判断是否为open状态
+        if (con.readyState != 1) {
+            return false;
+        }
+
         const pkg = {
             reqID: reqID,
             reqSN: this.genReqSN(),
