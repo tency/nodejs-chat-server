@@ -151,6 +151,7 @@ module.exports = class WSServer extends EventEmitter {
 
         ws.on("close", (code, reason) => {
             const conID = ws[this.conIDKey];
+            log.debug("ws.on close code = %d, connID = %d", code, conID);
             this.emit("disconnect", conID, code, reason);
             Utility.removeFromArray(this.connections, ws);
             delete this.id2ConMap[conID];

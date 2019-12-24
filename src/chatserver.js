@@ -50,6 +50,10 @@ class ChatServer extends Server {
         })
     }
 
+    shutdown() {
+        network.shutdown();
+    }
+
     onTick() {
         //log.debug("on tick, time = %d", Utility.getTime());
         const curTime = Utility.getTime();

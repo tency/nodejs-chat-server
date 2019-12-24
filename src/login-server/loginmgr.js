@@ -25,19 +25,15 @@ class LoginMgr {
                 dbMgr.getDbPlat().findOne({
                     _id: data.account
                 }, (err, result) => {
-                    log.debug('findOne err = ' + err)
+                    log.debug("findOne err = %s", err)
                     if (err) {
                         callback(ErrCode.FAILED);
                     } else if (!result) {
                         // 账号不存在，自动注册
-                        log.warn('can not find openid = %s, so create new one!', data.account);
+                        log.warn("can not find openid = %s, so create new one!", data.account);
                         this.createNewUser(conID, data.account, data.pwd, callback);
                     } else {
-                        log.info('data.pwd = %s', data.pwd)
-                        log.info('result.password = %s', result.password)
                         if (Md5(data.pwd) == result.password) {
-                            log.info('login succeed');
-
                             this.requestLoginChatServer(conID, result.id, result.openid, callback);
                         } else {
                             // 密码错误
@@ -90,7 +86,7 @@ class LoginMgr {
                     pwd = Utility.randomString(16);
                 }
                 const storePwd = Md5(pwd); // 数据库存md5密码
-                log.debug('newUID = %d', newUID);
+                log.debug("newUID = %d", newUID);
 
                 self.registerUser(conID, newUID, openid, (err, data) => {
                     dbMgr.getDbPlat().insertOne({
@@ -100,15 +96,15 @@ class LoginMgr {
                         time: Utility.getTime()
                     }, function (err, result) {
                         if (err) {
-                            log.error('plat insert new user failed! err = %s', err);
+                            log.error("plat insert new user failed! err = %s", err);
                         } else {
-                            log.info('create a new user suss');
+                            log.info("create a new user suss");
                             callback && callback(ErrCode.SUCCESS, data);
                         };
                     });
                 }, pwd);
             } else {
-                log.error('inc plat id error');
+                log.error("inc plat id error");
             }
         });
     }
@@ -141,16 +137,16 @@ class LoginMgr {
             }
             network.requestChat(MSG_ID.L2CS_USER_LOGOUT, reqData, (err, data) => {
                 if (err != ErrCode.SUCCESS) {
-                    log.error('user logout chat server failed, id = %s, err = %s', id, err);
+                    log.error("user logout chat server failed, id = %d, err = %s", id, err);
                     callback && callback(ErrCode.FAILED);
                 } else {
-                    log.info('user logout chat server suss, id = %s', id);
+                    log.info("user logout chat server suss, id = %d", id);
                     userMgr.removeUser(id);
                     callback && callback(ErrCode.SUCCESS);
                 }
             });
         } else {
-            log.error('can not find user, id = ' + id);
+            log.error("can not find user, id = ", id);
             callback && callback(ErrCode.FAILED);
         }
     }
@@ -164,7 +160,7 @@ class LoginMgr {
         };
 
         network.requestChat(MSG_ID.L2CS_USER_GET, userData, (err, data) => {
-            log.debug('receive chat server resp, err = %s', err);
+            log.debug("receive chat server resp, err = %s", err);
 
             let user = userMgr.getUser(data.mine.id);
             if (user) {
@@ -182,12 +178,12 @@ class LoginMgr {
 
     // 客户端断开
     onClientDisconnect(conID) {
-        log.debug('onClientDisconnect conID = %d', conID);
+        log.debug("onClientDisconnect conID = %d", conID);
         let id = this.connMap[conID];
         if (id) {
             // 通知chat server客户端断开
             this.logoutUser(id, (code) => {
-                log.info("user logout, id = %d, code = ", id, code);
+                log.info("user logout, id = %d, code = %d", id, code);
             });
         } else {
             log.error('onClientDisconnect user not exist, conID = %d', conID);

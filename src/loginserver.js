@@ -45,6 +45,10 @@ class LoginServer extends Server {
             log.info('LoginServer startup...');
         });
     }
+
+    shutdown() {
+        network.shutdown();
+    }
 }
 
 const loginServer = new LoginServer();
