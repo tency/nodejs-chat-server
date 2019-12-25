@@ -95,6 +95,9 @@ class ChatMgr {
                 } else {
                     callback && callback(ErrCode.FAILED, "user not exist!");
                 }
+            } else {
+                // 不支持的类型
+                callback && callback(ErrCode.FAILED, "not support type!");
             }
         }
     }
